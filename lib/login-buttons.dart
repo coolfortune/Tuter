@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tuter/signup.dart';
 
 class LoginButton extends StatelessWidget {
   LoginButton(
@@ -6,6 +7,10 @@ class LoginButton extends StatelessWidget {
 
   final String text;
   final double padding;
+
+  Future navigateToSignupPage(context) async {
+    Navigator.push(context, MaterialPageRoute(builder: (context) => SignupPage()));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +31,14 @@ class LoginButton extends StatelessWidget {
         ),
       ),
       shape: const StadiumBorder(),
-      onPressed: () => null,
+      onPressed: () {
+        if(this.text == 'Sign Up')
+          navigateToSignupPage(context);
+
+        if (this.text == 'Confirm')
+          print('Hello');
+      },
     );
   }
 }
+
