@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:tuter/customTextField.dart';
-import 'package:tuter/login-buttons.dart';
+import 'package:Tuter/customTextField.dart';
+import 'package:Tuter/login-buttons.dart';
+import 'package:Tuter/signup.dart';
 
 void main() => runApp(MyApp());
+
+  Future navigateToSignupPage(context) async {
+    Navigator.push(context, MaterialPageRoute(builder: (context) => SignupPage()));
+  }
+
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -120,7 +126,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   fontSize: 17.0,
                 ),
               ),
-              LoginButton(text: 'Sign Up', padding: 110.0, onPressed: () => print('Sign Up')),
+              LoginButton(text: 'Sign Up', padding: 110.0, onPressed: () => navigateToSignupPage(context)),
             ],
           ),
         ),
@@ -129,3 +135,4 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
+
