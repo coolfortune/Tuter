@@ -106,7 +106,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 fillColor: Colors.lightBlue[800],
                 elevation: 2.0,
                 child: Padding(
-                  padding: EdgeInsets.all(10.0),
+                  padding: EdgeInsets.symmetric(vertical: 10.0),
                   child: Text(
                     'Sign In with Google',
                     maxLines: 1,

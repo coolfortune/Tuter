@@ -16,7 +16,7 @@ class LoginButton extends StatelessWidget {
       fillColor: color,
       elevation: 2.0,
       child: Padding(
-        padding: EdgeInsets.all(10),
+        padding: EdgeInsets.symmetric(vertical: 10.0),
         child: Text(
           text,
           maxLines: 1,

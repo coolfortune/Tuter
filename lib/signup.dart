@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tuter/customTextField.dart';
 
 class SignupPage extends StatefulWidget {
 
@@ -71,7 +70,7 @@ class _SignupPage extends State<SignupPage> {
                   fillColor: Colors.black,
                   elevation: 2.0,
                   child: Padding(
-                    padding: EdgeInsets.all(10),
+                    padding: EdgeInsets.symmetric(vertical: 10.0),
                     child: Text(
                       'Confirm',
                       maxLines: 1,
