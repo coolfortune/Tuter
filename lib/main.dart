@@ -3,18 +3,20 @@ import 'package:flutter/material.dart';
 import 'package:Tuter/customTextField.dart';
 import 'package:Tuter/login-buttons.dart';
 import 'package:Tuter/signup.dart';
+import 'package:Tuter/forgot-password.dart';
 
 void main() => runApp(MyApp());
 
-Future navigateToSignupPage(context) async {
-  Navigator.of(context).push(_createRoute());
+Future navigateToPage(context, direction, page) async {
+  Navigator.of(context).push(_createRoute(direction, page));
 }
 
-Route _createRoute() {
+Route _createRoute(direction, page) {
   return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => SignupPage(),
+    pageBuilder: (context, animation, secondaryAnimation) => page,
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(1.0, 0.0);
+      var xOffset = direction == Direction.left ? -1.0 : 1.0;
+      var begin = Offset(xOffset, 0.0);
       var end = Offset.zero;
       var curve = Curves.ease;
 
@@ -27,6 +29,8 @@ Route _createRoute() {
     },
   );
 }
+
+enum Direction{ left, right }
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -168,7 +172,13 @@ class _MyHomePageState extends State<MyHomePage> {
                   onPressed: () => null,
                 ),
               ),
-              SizedBox(height: 60.0),
+              FlatButton(
+                onPressed: () => navigateToPage(context, Direction.left, ForgotPage()),
+                child: Text(
+                  'Forgot Password?',
+                ),
+              ),
+              SizedBox(height: 50.0),
               Text(
                 'New to Tüter?',
                 style: TextStyle(
@@ -178,7 +188,7 @@ class _MyHomePageState extends State<MyHomePage> {
               LoginButton(
                   text: 'Sign Up',
                   padding: 110.0,
-                  onPressed: () => navigateToSignupPage(context)),
+                  onPressed: () => navigateToPage(context, Direction.right, SignupPage())),
               SizedBox(height: 10.0),
             ],
           ),
@@ -187,4 +197,5 @@ class _MyHomePageState extends State<MyHomePage> {
       backgroundColor: Theme.of(context).primaryColor,
     );
   }
+
 }
