@@ -1,22 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:tuter/signup.dart';
+
+
 
 class LoginButton extends StatelessWidget {
   LoginButton(
-    {this.text, this.padding = 120.0});
+    {this.text, this.padding = 120.0, this.color = Colors.black, this.onPressed});
 
   final String text;
   final double padding;
-
-  Future navigateToSignupPage(context) async {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => SignupPage()));
-  }
+  final Function onPressed;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
     return RawMaterialButton(
       padding: EdgeInsets.symmetric(horizontal: padding),
-      fillColor: Colors.black,
+      fillColor: color,
       elevation: 2.0,
       child: Padding(
         padding: EdgeInsets.all(10),
@@ -31,14 +30,7 @@ class LoginButton extends StatelessWidget {
         ),
       ),
       shape: const StadiumBorder(),
-      onPressed: () {
-        if(this.text == 'Sign Up')
-          navigateToSignupPage(context);
-
-        if (this.text == 'Confirm')
-          print('Hello');
-      },
+      onPressed: onPressed,
     );
   }
 }
-

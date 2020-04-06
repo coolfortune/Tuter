@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:tuter/customTextField.dart';
-import 'package:tuter/login-buttons.dart';
+import 'package:Tuter/customTextField.dart';
+import 'package:Tuter/login-buttons.dart';
+import 'package:Tuter/signup.dart';
 
 void main() => runApp(MyApp());
+
+  Future navigateToSignupPage(context) async {
+    Navigator.push(context, MaterialPageRoute(builder: (context) => SignupPage()));
+  }
+
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -57,45 +63,72 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Column(
-              children: <Widget>[
-                CustomTextField(
-                  hint: 'Email',
-                  //password: false
-                  //validator: form validator function
-                  //onSaved: function called on saving
+        child: SingleChildScrollView(
+          child: Column(
+            // Column is also a layout widget. It takes a list of children and
+            // arranges them vertically. By default, it sizes itself to fit its
+            // children horizontally, and tries to be as tall as its parent.
+            //
+            // Invoke "debug painting" (press "p" in the console, choose the
+            // "Toggle Debug Paint" action from the Flutter Inspector in Android
+            // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
+            // to see the wireframe for each widget.
+            //
+            // Column has various properties to control how it sizes itself and
+            // how it positions its children. Here we use mainAxisAlignment to
+            // center the children vertically; the main axis here is the vertical
+            // axis because Columns are vertical (the cross axis would be
+            // horizontal).
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Column(
+                children: <Widget>[
+                  CustomTextField(
+                    hint: 'Email',
+                    //password: false
+                    //validator: form validator function
+                    //onSaved: function called on saving
+                  ),
+                  SizedBox(
+                    height: 10.0,
+                  ),
+                  CustomTextField(
+                    hint: 'Password',
+                    password: true,
+                    validator: (input) => input.isEmpty ? "Required" : null,
+                  ),
+                ],
+              ),
+              SizedBox(height: 25.0),
+              LoginButton(text: 'Login', onPressed: () => print('Login')),
+              RawMaterialButton(
+                padding: EdgeInsets.symmetric(horizontal: 60.0),
+                fillColor: Colors.lightBlue[800],
+                elevation: 2.0,
+                child: Padding(
+                  padding: EdgeInsets.all(10.0),
+                  child: Text(
+                    'Sign In with Google',
+                    maxLines: 1,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20.0,
+                    ),
+                  ),
                 ),
-                SizedBox(
-                  height: 10.0,
+                shape: StadiumBorder(),
+                onPressed: () => null,
+              ),
+              SizedBox(height: 60.0),
+              Text(
+                'New to Tüter?',
+                style: TextStyle(
+                  fontSize: 17.0,
                 ),
-                CustomTextField(
-                  hint: 'Password',
-                  password: true,
-                  validator: (input) => input.isEmpty ? "Required" : null,
-                ),
-              ],
-            ),
-            SizedBox(height: 25.0),
-            LoginButton(text: 'Login'),
-            LoginButton(text: 'Sign Up', padding: 110.0),
-          ],
+              ),
+              LoginButton(text: 'Sign Up', padding: 110.0, onPressed: () => navigateToSignupPage(context)),
+            ],
+          ),
         ),
       ),
       backgroundColor: Theme.of(context).primaryColor,
