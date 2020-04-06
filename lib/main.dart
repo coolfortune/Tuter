@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:Tuter/customTextField.dart';
 import 'package:Tuter/login-buttons.dart';
@@ -5,10 +6,27 @@ import 'package:Tuter/signup.dart';
 
 void main() => runApp(MyApp());
 
-  Future navigateToSignupPage(context) async {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => SignupPage()));
-  }
+Future navigateToSignupPage(context) async {
+  Navigator.of(context).push(_createRoute());
+}
 
+Route _createRoute() {
+  return PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) => SignupPage(),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      var begin = Offset(1.0, 0.0);
+      var end = Offset.zero;
+      var curve = Curves.ease;
+
+      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+      return SlideTransition(
+        position: animation.drive(tween),
+        child: child,
+      );
+    },
+  );
+}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -51,6 +69,10 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final formKey = GlobalKey<FormState>();
+  static const String googleLogo =
+      'https://cdn.clipart.email/13189a23fab66bb83ac56be2723942ee_download-free-png-google-logo-png-transparent-pictures-_945-945.png';
+
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -81,43 +103,70 @@ class _MyHomePageState extends State<MyHomePage> {
             // horizontal).
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Column(
+              SizedBox(height: 30.0),
+              Row(
                 children: <Widget>[
-                  CustomTextField(
-                    hint: 'Email',
-                    //password: false
-                    //validator: form validator function
-                    //onSaved: function called on saving
-                  ),
-                  SizedBox(
-                    height: 10.0,
-                  ),
-                  CustomTextField(
-                    hint: 'Password',
-                    password: true,
-                    validator: (input) => input.isEmpty ? "Required" : null,
+                  Image(
+                    image: AssetImage('lib/images/tuterLogo.png'),
+                    height: 130.0,
+                    width: 350.0,
                   ),
                 ],
               ),
+              SizedBox(height: 30.0),
+              Form(
+                key: formKey,
+                child: Column(
+                  children: <Widget>[
+                    CustomTextField(
+                      hint: 'Email',
+                      //password: false
+                      //validator: form validator function
+                      //onSaved: function called on saving
+                    ),
+                    SizedBox(
+                      height: 10.0,
+                    ),
+                    CustomTextField(
+                      hint: 'Password',
+                      password: true,
+                      validator: (input) => input.isEmpty ? "Required" : null,
+                    ),
+                  ],
+                ),
+              ),
               SizedBox(height: 25.0),
               LoginButton(text: 'Login', onPressed: () => print('Login')),
-              RawMaterialButton(
-                padding: EdgeInsets.symmetric(horizontal: 60.0),
-                fillColor: Colors.lightBlue[800],
-                elevation: 2.0,
-                child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 10.0),
-                  child: Text(
-                    'Sign In with Google',
-                    maxLines: 1,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20.0,
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 35.0, vertical: 8.0),
+                child: RawMaterialButton(
+                  fillColor: Colors.lightBlue[800],
+                  elevation: 2.0,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 10.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Image.network(
+                          googleLogo,
+                          height: 25.0,
+                          width: 25.0,
+                        ),
+                        SizedBox(width: 15.0),
+                        Text(
+                          'Login with Google',
+                          maxLines: 1,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20.0,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
+                  shape: StadiumBorder(),
+                  onPressed: () => null,
                 ),
-                shape: StadiumBorder(),
-                onPressed: () => null,
               ),
               SizedBox(height: 60.0),
               Text(
@@ -126,7 +175,11 @@ class _MyHomePageState extends State<MyHomePage> {
                   fontSize: 17.0,
                 ),
               ),
-              LoginButton(text: 'Sign Up', padding: 110.0, onPressed: () => navigateToSignupPage(context)),
+              LoginButton(
+                  text: 'Sign Up',
+                  padding: 110.0,
+                  onPressed: () => navigateToSignupPage(context)),
+              SizedBox(height: 10.0),
             ],
           ),
         ),
@@ -135,4 +188,3 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
-
