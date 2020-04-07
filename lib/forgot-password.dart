@@ -1,5 +1,6 @@
 import 'package:Tuter/customTextField.dart';
 import 'package:Tuter/login-buttons.dart';
+import 'package:Tuter/validate.dart';
 import 'package:flutter/material.dart';
 
 class ForgotPage extends StatefulWidget {
@@ -9,16 +10,27 @@ class ForgotPage extends StatefulWidget {
 }
 
 class _ForgotPage extends State<ForgotPage> {
-  final formKey = new GlobalKey<FormState>();
+  final formKey = GlobalKey<FormState>();
 
   String _email;
 
   void saveUserInformation() {
     final form = formKey.currentState;
     if (form.validate()) {
+      Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => ValidatePage()));
       print('Form is valid');
     } else {
       print('Form is invalid');
+    }
+  }
+
+  String validateEmail(input) {
+    RegExp pattern = RegExp(r"^[a-zA-Z0-9]+@[a-zA-z]*\.[a-z]{2,}$");
+
+    if (pattern.hasMatch(input)) {
+      return null;
+    } else {
+      return 'Please enter a valid email address';
     }
   }
 
@@ -37,20 +49,16 @@ class _ForgotPage extends State<ForgotPage> {
                 children: <Widget>[
                   CustomTextField(
                     hint: 'Please enter your Email Address',
-                    validator: (input) => input.isEmpty ? '*Required' : null,
+                    validator: validateEmail,
                     onSaved: (value) => _email = value,
                   ),
                   SizedBox(height: 50.0),
                   LoginButton(
                     text: 'Send Verification Code',
                     padding: 50.0,
-                    onPressed: () => saveUserInformation,
+                    onPressed: saveUserInformation,
                   ),
                   SizedBox(height: 100.0),
-                  LoginButton(
-                    text: 'Go Back',
-                    onPressed: () => Navigator.of(context).pop(),
-                  ),
                 ],
               ),
             ),

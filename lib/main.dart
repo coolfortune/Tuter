@@ -30,7 +30,7 @@ Route _createRoute(direction, page) {
   );
 }
 
-enum Direction{ left, right }
+enum Direction { left, right }
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -74,8 +74,6 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final formKey = GlobalKey<FormState>();
-  static const String googleLogo =
-      'https://cdn.clipart.email/13189a23fab66bb83ac56be2723942ee_download-free-png-google-logo-png-transparent-pictures-_945-945.png';
 
   @override
   Widget build(BuildContext context) {
@@ -151,8 +149,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        Image.network(
-                          googleLogo,
+                        Image(
+                          image: AssetImage('lib/images/googleLogo.png'),
                           height: 25.0,
                           width: 25.0,
                         ),
@@ -173,7 +171,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
               FlatButton(
-                onPressed: () => navigateToPage(context, Direction.left, ForgotPage()),
+                onPressed: () =>
+                    navigateToPage(context, Direction.left, ForgotPage()),
                 child: Text(
                   'Forgot Password?',
                 ),
@@ -188,7 +187,8 @@ class _MyHomePageState extends State<MyHomePage> {
               LoginButton(
                   text: 'Sign Up',
                   padding: 110.0,
-                  onPressed: () => navigateToPage(context, Direction.right, SignupPage())),
+                  onPressed: () =>
+                      navigateToPage(context, Direction.right, SignupPage())),
               SizedBox(height: 10.0),
             ],
           ),
@@ -197,5 +197,4 @@ class _MyHomePageState extends State<MyHomePage> {
       backgroundColor: Theme.of(context).primaryColor,
     );
   }
-
 }
