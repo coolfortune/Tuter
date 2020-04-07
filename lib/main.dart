@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:Tuter/customTextField.dart';
 import 'package:Tuter/login-buttons.dart';
 import 'package:Tuter/signup.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 void main() => runApp(MyApp());
 
@@ -61,7 +62,6 @@ class MyHomePage extends StatefulWidget {
   // case the title) provided by the parent (in this case the App widget) and
   // used by the build method of the State. Fields in a Widget subclass are
   // always marked "final".
-
   final String title;
 
   @override
@@ -69,7 +69,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
+  String _email, _password;
   static const String googleLogo =
       'https://cdn.clipart.email/13189a23fab66bb83ac56be2723942ee_download-free-png-google-logo-png-transparent-pictures-_945-945.png';
 
@@ -115,14 +116,14 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               SizedBox(height: 30.0),
               Form(
-                key: formKey,
+                key: _formKey,
                 child: Column(
                   children: <Widget>[
                     CustomTextField(
                       hint: 'Email',
                       //password: false
-                      //validator: form validator function
-                      //onSaved: function called on saving
+                      validator: (input) => input.isEmpty ? "Required" : null,
+                      onSaved: (value) => _email = value.trim(),
                     ),
                     SizedBox(
                       height: 10.0,
@@ -131,12 +132,13 @@ class _MyHomePageState extends State<MyHomePage> {
                       hint: 'Password',
                       password: true,
                       validator: (input) => input.isEmpty ? "Required" : null,
+                      onSaved: (value) => _password = value.trim(),
                     ),
                   ],
                 ),
               ),
               SizedBox(height: 25.0),
-              LoginButton(text: 'Login', onPressed: () => print('Login')),
+              LoginButton(text: 'Login', onPressed: logIn),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 35.0, vertical: 8.0),
                 child: RawMaterialButton(
@@ -186,5 +188,19 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       backgroundColor: Theme.of(context).primaryColor,
     );
+  }
+
+  Future<void> logIn() async {
+    final formState = _formKey.currentState;
+      if(formState.validate()){
+        formState.save();
+        try{
+          AuthResult user = await FirebaseAuth.instance.signInWithEmailAndPassword(email: _email, password: _password);
+          // TODO: Redirect to homepage
+          print("logged in!");
+        }catch(e){
+          print(e.toString());
+        }
+      }
   }
 }
