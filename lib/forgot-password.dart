@@ -1,7 +1,7 @@
 import 'package:Tuter/customTextField.dart';
 import 'package:Tuter/login-buttons.dart';
-import 'package:Tuter/validate.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class ForgotPage extends StatefulWidget {
   ForgotPage({Key key}) : super(key: key);
@@ -10,14 +10,26 @@ class ForgotPage extends StatefulWidget {
 }
 
 class _ForgotPage extends State<ForgotPage> {
-  final formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
 
   String _email;
 
-  void saveUserInformation() {
-    final form = formKey.currentState;
+  void saveUserInformation(BuildContext context) async {
+    final form = _formKey.currentState;
     if (form.validate()) {
-      Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => ValidatePage()));
+      form.save();
+
+      FirebaseAuth auth = FirebaseAuth.instance;
+      try {
+        await auth.sendPasswordResetEmail(email: _email);
+
+        Scaffold.of(context).showSnackBar(SnackBar(
+            content: Text('A password reset link has been sent to $_email')));
+      } catch (e) {
+        print(e);
+      }
+
+      print(_email);
       print('Form is valid');
     } else {
       print('Form is invalid');
@@ -25,9 +37,11 @@ class _ForgotPage extends State<ForgotPage> {
   }
 
   String validateEmail(input) {
-    RegExp pattern = RegExp(r"^[a-zA-Z0-9]+@[a-zA-z]*\.[a-z]{2,}$");
+    Pattern pattern =
+        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+    RegExp regex = RegExp(pattern);
 
-    if (pattern.hasMatch(input)) {
+    if (regex.hasMatch(input)) {
       return null;
     } else {
       return 'Please enter a valid email address';
@@ -39,32 +53,35 @@ class _ForgotPage extends State<ForgotPage> {
       appBar: AppBar(
         title: Text('Password Reset'),
       ),
-      body: Center(
-        child: SingleChildScrollView(
-          child: Container(
-            padding: EdgeInsets.all(10.0),
-            child: Form(
-              key: formKey,
-              child: Column(
-                children: <Widget>[
-                  CustomTextField(
-                    hint: 'Please enter your Email Address',
-                    validator: validateEmail,
-                    onSaved: (value) => _email = value,
-                  ),
-                  SizedBox(height: 50.0),
-                  LoginButton(
-                    text: 'Send Verification Code',
-                    padding: 50.0,
-                    onPressed: saveUserInformation,
-                  ),
-                  SizedBox(height: 100.0),
-                ],
+      body: Builder(
+        builder: (context) {
+        return Center(
+          child: SingleChildScrollView(
+            child: Container(
+              padding: EdgeInsets.all(10.0),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  children: <Widget>[
+                    CustomTextField(
+                      hint: 'Please enter your Email Address',
+                      validator: validateEmail,
+                      onSaved: (value) => _email = value.trim().toLowerCase(),
+                    ),
+                    SizedBox(height: 50.0),
+                    LoginButton(
+                      text: 'Send Verification Code',
+                      padding: 50.0,
+                      onPressed: () => saveUserInformation(context),
+                    ),
+                    SizedBox(height: 100.0),
+                  ],
+                ),
               ),
             ),
           ),
-        ),
-      ),
+        );
+      }),
       backgroundColor: Theme.of(context).primaryColor,
     );
   }
