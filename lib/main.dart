@@ -9,16 +9,16 @@ import 'package:Tuter/home.dart';
 void main() => runApp(MyApp());
 
 Future navigateToSignupPage(context) async {
-  Navigator.of(context).push(_createRoute());
+  Navigator.of(context).push(_createRoute(SignupPage()));
 }
 
 Future navigateToHomePage(context) async {
-  Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
+  Navigator.of(context).push(_createRoute(HomePage()));
 }
 
-Route _createRoute() {
+Route _createRoute(Widget page) {
   return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => SignupPage(),
+    pageBuilder: (context, animation, secondaryAnimation) => page,
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       var begin = Offset(1.0, 0.0);
       var end = Offset.zero;
