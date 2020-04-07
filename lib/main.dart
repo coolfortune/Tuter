@@ -4,6 +4,8 @@ import 'package:Tuter/customTextField.dart';
 import 'package:Tuter/login-buttons.dart';
 import 'package:Tuter/signup.dart';
 import 'package:Tuter/forgot-password.dart';
+import 'package:Tuter/home.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 void main() => runApp(MyApp());
 
@@ -15,10 +17,10 @@ Route _createRoute(direction, page) {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => page,
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var xOffset = direction == Direction.left ? -1.0 : 1.0;
-      var begin = Offset(xOffset, 0.0);
-      var end = Offset.zero;
-      var curve = Curves.ease;
+      double xOffset = direction == Direction.left ? -1.0 : 1.0;
+      Offset begin = Offset(xOffset, 0.0);
+      Offset end = Offset.zero;
+      Curve curve = Curves.ease;
 
       var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
 
@@ -73,7 +75,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
+  String _email, _password;
 
   @override
   Widget build(BuildContext context) {
@@ -117,14 +120,14 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               SizedBox(height: 30.0),
               Form(
-                key: formKey,
+                key: _formKey,
                 child: Column(
                   children: <Widget>[
                     CustomTextField(
                       hint: 'Email',
                       //password: false
-                      //validator: form validator function
-                      //onSaved: function called on saving
+                      validator: (input) => input.isEmpty ? "Required" : null,
+                      onSaved: (value) => _email = value.trim().toLowerCase(),
                     ),
                     SizedBox(
                       height: 10.0,
@@ -133,12 +136,13 @@ class _MyHomePageState extends State<MyHomePage> {
                       hint: 'Password',
                       password: true,
                       validator: (input) => input.isEmpty ? "Required" : null,
+                      onSaved: (value) => _password = value.trim(),
                     ),
                   ],
                 ),
               ),
               SizedBox(height: 25.0),
-              LoginButton(text: 'Login', onPressed: () => print('Login')),
+              LoginButton(text: 'Login', onPressed: logIn),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 35.0, vertical: 8.0),
                 child: RawMaterialButton(
@@ -196,5 +200,19 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       backgroundColor: Theme.of(context).primaryColor,
     );
+  }
+
+  Future<void> logIn() async {
+    final formState = _formKey.currentState;
+      if(formState.validate()){
+        formState.save();
+        try{
+          AuthResult user = await FirebaseAuth.instance.signInWithEmailAndPassword(email: _email, password: _password);
+          // TODO: Redirect to homepage
+          navigateToPage(context, Direction.right, HomePage());
+        }catch(e){
+          print(e.toString());
+        }
+      }
   }
 }
