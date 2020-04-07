@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-
-
 class LoginButton extends StatelessWidget {
   LoginButton(
     {this.text, this.padding = 120.0, this.color = Colors.black, this.onPressed});

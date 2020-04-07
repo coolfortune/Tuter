@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:Tuter/customTextField.dart';
 import 'package:Tuter/login-buttons.dart';
 import 'package:Tuter/signup.dart';
+import 'package:Tuter/home.dart';
 
 void main() => runApp(MyApp());
 
@@ -9,6 +10,9 @@ void main() => runApp(MyApp());
     Navigator.push(context, MaterialPageRoute(builder: (context) => SignupPage()));
   }
 
+  Future navigateToHomePage(context) async {
+    Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
+  }
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -100,7 +104,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ],
               ),
               SizedBox(height: 25.0),
-              LoginButton(text: 'Login', onPressed: () => print('Login')),
+              LoginButton(text: 'Login', onPressed: () => navigateToHomePage(context)),
               RawMaterialButton(
                 padding: EdgeInsets.symmetric(horizontal: 60.0),
                 fillColor: Colors.lightBlue[800],
@@ -135,3 +139,4 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
+
