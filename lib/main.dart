@@ -4,11 +4,16 @@ import 'package:Tuter/customTextField.dart';
 import 'package:Tuter/login-buttons.dart';
 import 'package:Tuter/signup.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:Tuter/home.dart';
 
 void main() => runApp(MyApp());
 
 Future navigateToSignupPage(context) async {
   Navigator.of(context).push(_createRoute());
+}
+
+Future navigateToHomePage(context) async {
+  Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
 }
 
 Route _createRoute() {
@@ -197,7 +202,7 @@ class _MyHomePageState extends State<MyHomePage> {
         try{
           AuthResult user = await FirebaseAuth.instance.signInWithEmailAndPassword(email: _email, password: _password);
           // TODO: Redirect to homepage
-          print("logged in!");
+          navigateToHomePage(context);
         }catch(e){
           print(e.toString());
         }
