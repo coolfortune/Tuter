@@ -3,26 +3,24 @@ import 'package:flutter/material.dart';
 import 'package:Tuter/customTextField.dart';
 import 'package:Tuter/login-buttons.dart';
 import 'package:Tuter/signup.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:Tuter/forgot-password.dart';
 import 'package:Tuter/home.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 void main() => runApp(MyApp());
 
-Future navigateToSignupPage(context) async {
-  Navigator.of(context).push(_createRoute(SignupPage()));
+Future navigateToPage(context, direction, page) async {
+  Navigator.of(context).push(_createRoute(direction, page));
 }
 
-Future navigateToHomePage(context) async {
-  Navigator.of(context).push(_createRoute(HomePage()));
-}
-
-Route _createRoute(Widget page) {
+Route _createRoute(direction, page) {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => page,
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(1.0, 0.0);
-      var end = Offset.zero;
-      var curve = Curves.ease;
+      double xOffset = direction == Direction.left ? -1.0 : 1.0;
+      Offset begin = Offset(xOffset, 0.0);
+      Offset end = Offset.zero;
+      Curve curve = Curves.ease;
 
       var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
 
@@ -33,6 +31,8 @@ Route _createRoute(Widget page) {
     },
   );
 }
+
+enum Direction { left, right }
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -67,6 +67,7 @@ class MyHomePage extends StatefulWidget {
   // case the title) provided by the parent (in this case the App widget) and
   // used by the build method of the State. Fields in a Widget subclass are
   // always marked "final".
+
   final String title;
 
   @override
@@ -76,8 +77,6 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final _formKey = GlobalKey<FormState>();
   String _email, _password;
-  static const String googleLogo =
-      'https://cdn.clipart.email/13189a23fab66bb83ac56be2723942ee_download-free-png-google-logo-png-transparent-pictures-_945-945.png';
 
   @override
   Widget build(BuildContext context) {
@@ -128,7 +127,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       hint: 'Email',
                       //password: false
                       validator: (input) => input.isEmpty ? "Required" : null,
-                      onSaved: (value) => _email = value.trim(),
+                      onSaved: (value) => _email = value.trim().toLowerCase(),
                     ),
                     SizedBox(
                       height: 10.0,
@@ -154,8 +153,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        Image.network(
-                          googleLogo,
+                        Image(
+                          image: AssetImage('lib/images/googleLogo.png'),
                           height: 25.0,
                           width: 25.0,
                         ),
@@ -175,7 +174,14 @@ class _MyHomePageState extends State<MyHomePage> {
                   onPressed: () => null,
                 ),
               ),
-              SizedBox(height: 60.0),
+              FlatButton(
+                onPressed: () =>
+                    navigateToPage(context, Direction.left, ForgotPage()),
+                child: Text(
+                  'Forgot Password?',
+                ),
+              ),
+              SizedBox(height: 50.0),
               Text(
                 'New to Tüter?',
                 style: TextStyle(
@@ -185,7 +191,8 @@ class _MyHomePageState extends State<MyHomePage> {
               LoginButton(
                   text: 'Sign Up',
                   padding: 110.0,
-                  onPressed: () => navigateToSignupPage(context)),
+                  onPressed: () =>
+                      navigateToPage(context, Direction.right, SignupPage())),
               SizedBox(height: 10.0),
             ],
           ),
@@ -202,7 +209,7 @@ class _MyHomePageState extends State<MyHomePage> {
         try{
           AuthResult user = await FirebaseAuth.instance.signInWithEmailAndPassword(email: _email, password: _password);
           // TODO: Redirect to homepage
-          navigateToHomePage(context);
+          navigateToPage(context, Direction.right, HomePage());
         }catch(e){
           print(e.toString());
         }
