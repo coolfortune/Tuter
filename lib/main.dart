@@ -1,4 +1,4 @@
-import 'package:Tuter/auth.dart';
+import 'package:Tuter/backend/auth.dart';
 import 'package:Tuter/wrapper.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';

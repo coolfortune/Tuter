@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:Tuter/backend/auth.dart';
 
 class SignupPage extends StatefulWidget {
   SignupPage({Key key}) : super(key: key);
@@ -10,6 +11,7 @@ enum StudentType { student, tutor }
 
 class _SignupPage extends State<SignupPage> {
   final formKey = new GlobalKey<FormState>();
+  final Auth _auth = Auth();
 
   String _email;
   String _password;
@@ -19,13 +21,17 @@ class _SignupPage extends State<SignupPage> {
 
   StudentType _type = StudentType.student;
 
-  void saveUserInformation() {
+  void saveUserInformation() async {
     final form = formKey.currentState;
     if (form.validate()) {
+      form.save();
       print('Form is valid');
     } else {
       print('Form is invalid');
     }
+
+    dynamic result = await _auth.registerWithEmailAndPassword(_email.trim(), _password, _firstName, _lastName, _major);
+    
   }
 
   Widget build(BuildContext context) {
