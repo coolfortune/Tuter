@@ -1,3 +1,4 @@
+import 'package:Tuter/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:Tuter/appointment.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -29,7 +30,13 @@ class _HomePage extends State<HomePage> with SingleTickerProviderStateMixin {
     {"className": 'COP3402', "time": '13:00', "date": 'Wednesday', "tutorName": 'Timothy Jinkys'},
     {"className": 'COP3402', "time": '13:00', "date": 'Wednesday', "tutorName": 'Timothy Jinkys'},
     {"className": 'COP3402', "time": '13:00', "date": 'Wednesday', "tutorName": 'Timothy Jinkys'},
+  ];
 
+  final Auth _auth = Auth();
+
+  final _pageOptions = [
+    Text('Appointment Page'),
+    Text('Profile Page'),
   ];
 
   Widget _buildBody(BuildContext context) {
@@ -80,8 +87,17 @@ class _HomePage extends State<HomePage> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: Center(child: Text('Home')),
-        ),
+        title: Text('Home'),
+        actions: <Widget>[
+          FlatButton.icon(
+            icon: Icon(Icons.person),
+            label: Text('Log Out'),
+            onPressed: () async {
+              await _auth.logOut();
+            },
+          )
+        ],
+      ),
       body: _buildBody(context),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
@@ -91,7 +107,7 @@ class _HomePage extends State<HomePage> with SingleTickerProviderStateMixin {
             
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.folder),
+            icon: Icon(Icons.person),
             title: Text('Profile'),
           )
         ],
