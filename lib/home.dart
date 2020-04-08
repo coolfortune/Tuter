@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:Tuter/appointment.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+
 
 
 class HomePage extends StatefulWidget {
@@ -17,33 +20,55 @@ class _HomePage extends State<HomePage> with SingleTickerProviderStateMixin {
     });
   }
 
-  final _pageOptions = [
-    Text('Appointment Page'),
-    Text('Profile Page'),
+  final _appointmentList = [
+    {"className": 'COP3402', "time": '13:00', "date": 'Wednesday', "tutorName": 'Jeff Fortune'},
+    {"className": 'COP3402', "time": '13:00', "date": 'Wednesday', "tutorName": 'Timothy Jinkys'},
   ];
 
+  Widget _buildBody(BuildContext context) {
+    // TODO: get actual snapshot from Cloud Firestore
+    return _buildList(context, _appointmentList);
+  }
 
-  Widget appointmentList() {
+  Widget _buildList(BuildContext context, List<Map> snapshot) {
     return ListView(
-      children: <Appointment>[
-        new Appointment(className: 'COP3402', time: '13:00', date: 'Wednesday', tutor: 'Jeff',)
-      ],
+      padding: const EdgeInsets.only(top: 20.0),
+      children: snapshot.map((data) => _buildListItem(context, data)).toList()
     );
   }
 
-  final _appointmentList = [
-    Appointment(className: 'COP3402', time: '13:00', date: 'Wednesday', tutor: 'Jeff',),
-    Appointment(className: 'COP4210', time: '14:00', date: 'Thursday', tutor: 'Tim'),
-  ];
+
+  Widget _buildListItem(BuildContext context, Map data) {
+    final record = Appointment.fromMap(data);
+
+    return Padding(
+      key: ValueKey(record.tutorName),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey),
+          borderRadius: BorderRadius.circular(5.0),
+        ),
+        child: ListTile(
+          title: Text(record.time),
+          leading: Text(record.date),
+          trailing: Text(record.className),
+          isThreeLine: true,
+          subtitle: Text(record.tutorName),
+          onTap: () => print(record),
+        ),
+      ),
+    );
+  }
 
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Home'),
-      ),
-      body: Center(child: _appointmentList[_selectedIndex]),
+          title: Center(child: Text('Home')),
+        ),
+      body: _buildBody(context),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
@@ -60,7 +85,9 @@ class _HomePage extends State<HomePage> with SingleTickerProviderStateMixin {
         onTap: _onItemTapped,
         selectedItemColor: Color(0xFF000000),
       ),
+
     );
       
   }
 }
+
