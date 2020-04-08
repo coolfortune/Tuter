@@ -23,14 +23,28 @@ class _HomePage extends State<HomePage> with SingleTickerProviderStateMixin {
   final _appointmentList = [
     {"className": 'COP3402', "time": '13:00', "date": 'Wednesday', "tutorName": 'Jeff Fortune'},
     {"className": 'COP3402', "time": '13:00', "date": 'Wednesday', "tutorName": 'Timothy Jinkys'},
+    {"className": 'COP3402', "time": '13:00', "date": 'Wednesday', "tutorName": 'Timothy Jinkys'},
+    {"className": 'COP3402', "time": '13:00', "date": 'Wednesday', "tutorName": 'Timothy Jinkys'},
+    {"className": 'COP3402', "time": '13:00', "date": 'Wednesday', "tutorName": 'Timothy Jinkys'},
+    {"className": 'COP3402', "time": '13:00', "date": 'Wednesday', "tutorName": 'Timothy Jinkys'},
+    {"className": 'COP3402', "time": '13:00', "date": 'Wednesday', "tutorName": 'Timothy Jinkys'},
+    {"className": 'COP3402', "time": '13:00', "date": 'Wednesday', "tutorName": 'Timothy Jinkys'},
+
   ];
 
   Widget _buildBody(BuildContext context) {
     // TODO: get actual snapshot from Cloud Firestore
-    return _buildList(context, _appointmentList);
+    return StreamBuilder<QuerySnapshot>(
+      stream: Firestore.instance.collection('Appointments').snapshots(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) return LinearProgressIndicator();
+
+        return _buildList(context, snapshot.data.documents);
+      }
+    );
   }
 
-  Widget _buildList(BuildContext context, List<Map> snapshot) {
+  Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {
     return ListView(
       padding: const EdgeInsets.only(top: 20.0),
       children: snapshot.map((data) => _buildListItem(context, data)).toList()
@@ -38,8 +52,8 @@ class _HomePage extends State<HomePage> with SingleTickerProviderStateMixin {
   }
 
 
-  Widget _buildListItem(BuildContext context, Map data) {
-    final record = Appointment.fromMap(data);
+  Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
+    final record = Appointment.fromSnapshot(data);
 
     return Padding(
       key: ValueKey(record.tutorName),
@@ -51,10 +65,10 @@ class _HomePage extends State<HomePage> with SingleTickerProviderStateMixin {
         ),
         child: ListTile(
           title: Text(record.time),
-          leading: Text(record.date),
-          trailing: Text(record.className),
+          leading: Text(record.className),
+          trailing: Text(record.tutorName),
           isThreeLine: true,
-          subtitle: Text(record.tutorName),
+          subtitle: Text(record.date),
           onTap: () => print(record),
         ),
       ),
