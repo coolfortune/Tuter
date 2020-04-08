@@ -1,3 +1,4 @@
+import 'package:Tuter/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:Tuter/appointment.dart';
 
@@ -16,6 +17,8 @@ class _HomePage extends State<HomePage> with SingleTickerProviderStateMixin {
       _selectedIndex = index;
     });
   }
+
+  final Auth _auth = Auth();
 
   final _pageOptions = [
     Text('Appointment Page'),
@@ -42,6 +45,15 @@ class _HomePage extends State<HomePage> with SingleTickerProviderStateMixin {
     return Scaffold(
       appBar: AppBar(
         title: Text('Home'),
+        actions: <Widget>[
+          FlatButton.icon(
+            icon: Icon(Icons.person),
+            label: Text('Log Out'),
+            onPressed: () async {
+              await _auth.LogOut();
+            },
+          )
+        ],
       ),
       body: Center(child: _appointmentList[_selectedIndex]),
       bottomNavigationBar: BottomNavigationBar(

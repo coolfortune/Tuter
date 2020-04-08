@@ -149,7 +149,7 @@ class _LogInState extends State<LogIn> {final _formKey = GlobalKey<FormState>();
         formState.save();
         try{
           AuthResult user = await FirebaseAuth.instance.signInWithEmailAndPassword(email: _email, password: _password);
-          navigateToPage(context, Direction.right, HomePage());
+         // navigateToPage(context, Direction.right, HomePage());
         }catch(e){
           print(e.toString());
         }
