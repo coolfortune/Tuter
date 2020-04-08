@@ -128,7 +128,7 @@ class _HomePage extends State<HomePage> with SingleTickerProviderStateMixin {
 
   // Filtering function for the list builder
   bool _filterList(snapshot) {
-    if (_searchText == "") {
+    if (_searchText == "" || _searchText == null) {
       return true;
     } else {
       return snapshot.data['className']
