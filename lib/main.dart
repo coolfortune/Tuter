@@ -36,6 +36,7 @@ enum Direction { left, right }
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    // takes in stream from auth.dart to give to wrapper
     return StreamProvider<FirebaseUser>.value(
       value: Auth().user,
       child: MaterialApp(
