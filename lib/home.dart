@@ -50,7 +50,7 @@ class _HomePage extends State<HomePage> with SingleTickerProviderStateMixin {
             icon: Icon(Icons.person),
             label: Text('Log Out'),
             onPressed: () async {
-              await _auth.LogOut();
+              await _auth.logOut();
             },
           )
         ],

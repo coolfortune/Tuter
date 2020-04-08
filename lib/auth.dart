@@ -11,11 +11,21 @@ class Auth {
 
   // log in
 
+  Future logIn(String email, String password) async{
+    try{
+      AuthResult result = await _auth.signInWithEmailAndPassword(email: email, password: password);
+      return result.user;
+    }
+    catch(e){
+      print(e.toString());
+      return null;
+    }
 
+  }
 
   // log out
 
-  Future LogOut() async {
+  Future logOut() async{
     try{
       return await _auth.signOut();
     }

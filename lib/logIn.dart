@@ -1,3 +1,4 @@
+import 'package:Tuter/auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:Tuter/customTextField.dart';
@@ -38,6 +39,8 @@ Route _createRoute(direction, page) {
 enum Direction { left, right }
 
 class _LogInState extends State<LogIn> {final _formKey = GlobalKey<FormState>();
+
+  final Auth _auth = Auth();
   String _email, _password;
 
   @override
@@ -83,7 +86,19 @@ class _LogInState extends State<LogIn> {final _formKey = GlobalKey<FormState>();
                 ),
               ),
               SizedBox(height: 25.0),
-              LoginButton(text: 'Login', onPressed: logIn),
+              LoginButton(
+                text: 'Login',
+                onPressed: () async{
+                  final form = _formKey.currentState;
+                  if(_formKey.currentState.validate())
+                    {
+                      form.save();
+                      dynamic result = await _auth.logIn(_email, _password);
+                      if(result == null)
+                        print('Email or password is incorrect');
+                    }
+                }
+              ),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 35.0, vertical: 8.0),
                 child: RawMaterialButton(
@@ -143,16 +158,16 @@ class _LogInState extends State<LogIn> {final _formKey = GlobalKey<FormState>();
     );
   }
 
-  Future<void> logIn() async {
-    final formState = _formKey.currentState;
-      if(formState.validate()){
-        formState.save();
-        try{
-          AuthResult user = await FirebaseAuth.instance.signInWithEmailAndPassword(email: _email, password: _password);
-         // navigateToPage(context, Direction.right, HomePage());
-        }catch(e){
-          print(e.toString());
-        }
-      }
-  }
+  // Future<void> logIn() async {
+  //   final formState = _formKey.currentState;
+  //     if(formState.validate()){
+  //       formState.save();
+  //       try{
+  //         AuthResult user = await FirebaseAuth.instance.signInWithEmailAndPassword(email: _email, password: _password);
+  //        // navigateToPage(context, Direction.right, HomePage());
+  //       }catch(e){
+  //         print(e.toString());
+  //       }
+  //     }
+  // }
 }
