@@ -22,7 +22,7 @@ Route _createRoute(direction, page) {
       Offset end = Offset.zero;
       Curve curve = Curves.ease;
 
-      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+      Animatable<Offset> tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
 
       return SlideTransition(
         position: animation.drive(tween),
