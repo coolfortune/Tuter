@@ -10,9 +10,17 @@ class Appointment extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Column(
       children: <Widget>[
-        
+        Container(
+          padding: EdgeInsets.all(15.0),
+          child: Text('$className: $date, $time ($tutor)',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        Divider(),
       ],
     );
   }
