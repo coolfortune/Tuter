@@ -21,17 +21,39 @@ class _SignupPage extends State<SignupPage> {
 
   StudentType _type = StudentType.student;
 
+  // function to register during sign up on click of confirm
   void saveUserInformation() async {
     final form = formKey.currentState;
-    if (form.validate()) {
+    // if form is valid, register
+    if (form.validate())
+    {
       form.save();
       print('Form is valid');
-    } else {
+      // check for student, create user and Student collection
+      if (_type == StudentType.student)
+      {
+        print('registering student');
+        dynamic result = await _auth.registerStudent(_email.trim(), _password, _firstName, _lastName, _major);
+        if (result == null)
+        {
+          print('registration failed');
+        }
+      }
+      // check for Tutor, create user and Tutor collection
+      else if (_type == StudentType.tutor)
+      {
+        print('registering tutor');
+        dynamic result = await _auth.registerTutor(_email.trim(), _password, _firstName, _lastName, _major);
+        if (result == null)
+        {
+          print('registration failed');
+        }
+      }
+    } 
+    else 
+    {
       print('Form is invalid');
-    }
-
-    dynamic result = await _auth.registerWithEmailAndPassword(_email.trim(), _password, _firstName, _lastName, _major);
-    
+    }    
   }
 
   Widget build(BuildContext context) {

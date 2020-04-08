@@ -5,8 +5,8 @@ import 'package:Tuter/customTextField.dart';
 import 'package:Tuter/login-buttons.dart';
 import 'package:Tuter/signup.dart';
 import 'package:Tuter/forgot-password.dart';
-import 'package:Tuter/home.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+// import 'package:Tuter/home.dart';
+// import 'package:firebase_auth/firebase_auth.dart';
 
 class LogIn extends StatefulWidget {
   @override

@@ -45,12 +45,25 @@ class Auth {
 
   // sign up
 
-  Future registerWithEmailAndPassword(String email, String password, String firstName, String lastName, String major) async {
+  Future registerStudent(String email, String password, String firstName, String lastName, String major) async {
     try {
       AuthResult result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
       FirebaseUser user = result.user;
-      // create a new document for the user with the uid
-      await DatabaseService(uid: user.uid).updateUserData(email, firstName, lastName, major);
+      // create a new Student for the user with the uid
+      await DatabaseService(uid: user.uid).updateStudentData(email, firstName, lastName, major);
+      return _userFromFirebaseUser(user);
+    } catch (error) {
+      print(error.toString());
+      return null;
+    } 
+  }
+
+  Future registerTutor(String email, String password, String firstName, String lastName, String major) async {
+    try {
+      AuthResult result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
+      FirebaseUser user = result.user;
+      // create a new Tutor for the user with the uid
+      await DatabaseService(uid: user.uid).updateTutorData(email, firstName, lastName, major);
       return _userFromFirebaseUser(user);
     } catch (error) {
       print(error.toString());
