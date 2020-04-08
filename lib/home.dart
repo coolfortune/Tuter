@@ -25,9 +25,7 @@ class _HomePage extends State<HomePage> with SingleTickerProviderStateMixin {
 
   Widget appointmentList() {
     return ListView(
-      children: <Appointment>[
-        new Appointment(className: 'COP3402', time: '13:00', date: 'Wednesday', tutor: 'Jeff',)
-      ],
+      children: _appointmentList
     );
   }
 
@@ -43,7 +41,7 @@ class _HomePage extends State<HomePage> with SingleTickerProviderStateMixin {
       appBar: AppBar(
         title: Text('Home'),
       ),
-      body: Center(child: _appointmentList[_selectedIndex]),
+      body: Center(child: appointmentList()),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
@@ -52,7 +50,7 @@ class _HomePage extends State<HomePage> with SingleTickerProviderStateMixin {
             
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.folder),
+            icon: Icon(Icons.person),
             title: Text('Profile'),
           )
         ],
