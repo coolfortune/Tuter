@@ -10,6 +10,7 @@ void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    // receives stream from auth.dart to give to wrapper class
     return StreamProvider<FirebaseUser>.value(
       value: Auth().user,
       child: MaterialApp(
