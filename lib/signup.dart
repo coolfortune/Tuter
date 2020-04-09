@@ -1,3 +1,4 @@
+import 'package:Tuter/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:Tuter/backend/auth.dart';
 
@@ -12,6 +13,7 @@ enum StudentType { student, tutor }
 class _SignupPage extends State<SignupPage> {
   final formKey = new GlobalKey<FormState>();
   final Auth _auth = Auth();
+  bool loading = false;
 
   String _email;
   String _password;
@@ -32,21 +34,31 @@ class _SignupPage extends State<SignupPage> {
       // check for student, create user and Student collection
       if (_type == StudentType.student)
       {
+        setState(() => loading = true);
         print('registering student');
         dynamic result = await _auth.registerStudent(_email.trim(), _password, _firstName, _lastName, _major);
         if (result == null)
         {
-          print('registration failed');
+          setState(() 
+          {
+            print('registration failed');
+            loading = false;
+          });
         }
       }
       // check for Tutor, create user and Tutor collection
       else if (_type == StudentType.tutor)
       {
+        setState(() => loading = true);
         print('registering tutor');
         dynamic result = await _auth.registerTutor(_email.trim(), _password, _firstName, _lastName, _major);
         if (result == null)
         {
-          print('registration failed');
+          setState(() 
+          {
+            print('registration failed');
+            loading = false;
+          });
         }
       }
     } 
@@ -57,7 +69,7 @@ class _SignupPage extends State<SignupPage> {
   }
 
   Widget build(BuildContext context) {
-    return new Scaffold(
+    return loading ? Loading() : Scaffold(
         appBar: new AppBar(
           title: Text('Hello, Welcome to Tüter!'),
         ),
