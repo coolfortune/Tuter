@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
-import 'package:Tuter/users.dart';
+// import 'package:flutter/material.dart';
+// import 'package:Tuter/Models/user.dart';
 
 class Appointment {
   final String className;

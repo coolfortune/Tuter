@@ -38,63 +38,63 @@ class _HomePage extends State<HomePage> with SingleTickerProviderStateMixin {
     });
   }
 
-  final _appointmentList = [
-    {
-      "className": 'COP3402',
-      "time": '13:00',
-      "date": 'Wednesday',
-      "tutorName": 'Jeff Fortune'
-    },
-    {
-      "className": 'COP3402',
-      "time": '13:00',
-      "date": 'Wednesday',
-      "tutorName": 'Timothy Jinkys'
-    },
-    {
-      "className": 'COP3402',
-      "time": '13:00',
-      "date": 'Wednesday',
-      "tutorName": 'Timothy Jinkys'
-    },
-    {
-      "className": 'COP3402',
-      "time": '13:00',
-      "date": 'Wednesday',
-      "tutorName": 'Timothy Jinkys'
-    },
-    {
-      "className": 'COP3402',
-      "time": '13:00',
-      "date": 'Wednesday',
-      "tutorName": 'Timothy Jinkys'
-    },
-    {
-      "className": 'COP3402',
-      "time": '13:00',
-      "date": 'Wednesday',
-      "tutorName": 'Timothy Jinkys'
-    },
-    {
-      "className": 'COP3402',
-      "time": '13:00',
-      "date": 'Wednesday',
-      "tutorName": 'Timothy Jinkys'
-    },
-    {
-      "className": 'COP3402',
-      "time": '13:00',
-      "date": 'Wednesday',
-      "tutorName": 'Timothy Jinkys'
-    },
-  ];
+  // final _appointmentList = [
+  //   {
+  //     "className": 'COP3402',
+  //     "time": '13:00',
+  //     "date": 'Wednesday',
+  //     "tutorName": 'Jeff Fortune'
+  //   },
+  //   {
+  //     "className": 'COP3402',
+  //     "time": '13:00',
+  //     "date": 'Wednesday',
+  //     "tutorName": 'Timothy Jinks'
+  //   },
+  //   {
+  //     "className": 'COP3402',
+  //     "time": '13:00',
+  //     "date": 'Wednesday',
+  //     "tutorName": 'Timothy Jinks'
+  //   },
+  //   {
+  //     "className": 'COP3402',
+  //     "time": '13:00',
+  //     "date": 'Wednesday',
+  //     "tutorName": 'Timothy Jinks'
+  //   },
+  //   {
+  //     "className": 'COP3402',
+  //     "time": '13:00',
+  //     "date": 'Wednesday',
+  //     "tutorName": 'Timothy Jinks'
+  //   },
+  //   {
+  //     "className": 'COP3402',
+  //     "time": '13:00',
+  //     "date": 'Wednesday',
+  //     "tutorName": 'Timothy Jinks'
+  //   },
+  //   {
+  //     "className": 'COP3402',
+  //     "time": '13:00',
+  //     "date": 'Wednesday',
+  //     "tutorName": 'Timothy Jinks'
+  //   },
+  //   {
+  //     "className": 'COP3402',
+  //     "time": '13:00',
+  //     "date": 'Wednesday',
+  //     "tutorName": 'Timothy Jinks'
+  //   },
+  // ];
 
   final Auth _auth = Auth();
 
-  final _pageOptions = [
-    Text('Appointment Page'),
-    Text('Profile Page'),
-  ];
+  // final _pageOptions = [
+  //   Text('Appointment Page'),
+  //   Text('Profile Page'),
+  // ];
 
   Widget _buildBody(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(

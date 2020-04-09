@@ -17,6 +17,8 @@ class DatabaseService {
       'firstName': firstName,
       'lastName' : lastName,
       'major': major,
+      'positiveRatings': 0,
+      'totalRatings': 0,
     });
   }
 
@@ -26,6 +28,9 @@ class DatabaseService {
       'firstName': firstName,
       'lastName' : lastName,
       'major': major,
+      'positiveRatings': 0,
+      'totalRatings': 0,
+      'verified': false,
     });
   }
 
