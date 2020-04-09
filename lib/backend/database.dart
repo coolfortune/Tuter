@@ -29,6 +29,14 @@ class DatabaseService {
     });
   }
 
+  Stream<QuerySnapshot> get students {
+    return studentCollection.snapshots();
+  }
+
+  Stream<QuerySnapshot> get tutors {
+    return tutorCollection.snapshots();
+  }
+
   // // student list from snapshot
   // List<Student> _studentsFromSnapshot(QuerySnapshot snapshot) {
   //   return snapshot.documents.map((doc){
