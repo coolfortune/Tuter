@@ -1,32 +1,44 @@
 // import 'package:Tuter/Models/student.dart';
 // import 'package:Tuter/Models/tutor.dart';
+import 'package:Tuter/appointment.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class DatabaseService {
-
   final String uid;
-  DatabaseService({ this.uid });
+  DatabaseService({this.uid});
 
   // collection reference
-  final CollectionReference studentCollection = Firestore.instance.collection('Students');
-  final CollectionReference tutorCollection = Firestore.instance.collection('Tutors');
+  final CollectionReference studentCollection =
+      Firestore.instance.collection('Students');
+  final CollectionReference tutorCollection =
+      Firestore.instance.collection('Tutors');
 
-  Future<void> updateStudentData(String email, String firstName, String lastName, String major) async {
+  Future<void> updateStudentData(
+      String email, String firstName, String lastName, String major) async {
     return await studentCollection.document(uid).setData({
       'email': email,
       'firstName': firstName,
-      'lastName' : lastName,
+      'lastName': lastName,
       'major': major,
       'positiveRatings': 0,
       'totalRatings': 0,
     });
   }
 
-  Future<void> updateTutorData(String email, String firstName, String lastName, String major) async {
+  Future<void> addAppointment(String uid, Appointment record) async {
+    final DocumentReference reference = record.reference;
+
+    return await studentCollection.document(uid).updateData({
+      'appointments': FieldValue.arrayUnion([reference])
+    });
+  }
+
+  Future<void> updateTutorData(
+      String email, String firstName, String lastName, String major) async {
     return await tutorCollection.document(uid).setData({
       'email': email,
       'firstName': firstName,
-      'lastName' : lastName,
+      'lastName': lastName,
       'major': major,
       'positiveRatings': 0,
       'totalRatings': 0,
