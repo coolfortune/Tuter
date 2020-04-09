@@ -1,5 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:Tuter/models/user.dart';
+import 'package:Tuter/Models/user.dart';
 import 'package:Tuter/backend/database.dart';
 
 
