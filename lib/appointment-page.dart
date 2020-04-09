@@ -3,11 +3,8 @@ import 'package:Tuter/appointment.dart';
 import 'package:flutter/material.dart';
 import 'package:Tuter/auth.dart';
 
-
-
 class AppointmentPage extends StatefulWidget {
-  @override 
-
+  @override
   _AppointmentPage createState() => new _AppointmentPage();
 }
 
@@ -16,7 +13,6 @@ class _AppointmentPage extends State<AppointmentPage> {
   final TextEditingController _filter = TextEditingController();
   bool _searching = false;
 
-  
   @override
   void initState() {
     super.initState();
@@ -45,7 +41,7 @@ class _AppointmentPage extends State<AppointmentPage> {
         });
   }
 
-    Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {
+  Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {
     return ListView(
         padding: EdgeInsets.only(top: 20.0),
         // Filters based on your search query; returns everything if empty
@@ -55,31 +51,64 @@ class _AppointmentPage extends State<AppointmentPage> {
             .toList());
   }
 
-  
   Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
     final record = Appointment.fromSnapshot(data);
 
-    return Padding(
-      key: ValueKey(record.tutorName),
-      padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-      child: Container(
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey),
-          borderRadius: BorderRadius.circular(5.0),
+    return PopupMenuButton(
+      itemBuilder: (context) => [
+        PopupMenuItem(
+          value: 1,
+          child: Text('Add Appointment'),
         ),
-        child: ListTile(
-          title: Text(record.time),
-          leading: Text(record.className),
-          trailing: Text(record.tutorName),
-          isThreeLine: true,
-          subtitle: Text(record.date),
-          onTap: () => print(record),
+      ],
+      offset: Offset(1.0, 0),
+      onSelected: (value) {
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text('Confirm Appointment?'),
+                content: Text(
+                    '${record.className} with ${record.tutorName} on\n${record.date} at ${record.time}?'),
+                actions: <Widget>[
+                  FlatButton(
+                    textColor: Colors.amber,
+                    onPressed: _addAppointment,
+                    child: Text('Yes')),
+                  FlatButton(
+                    textColor: Colors.amber,
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: Text('No')),
+                ],
+              );
+            });
+      },
+      child: Padding(
+        key: ValueKey(record.tutorName),
+        padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+        child: Container(
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey),
+            borderRadius: BorderRadius.circular(5.0),
+          ),
+          child: ListTile(
+            title: Text(record.time),
+            leading: Text(record.className),
+            trailing: Text(record.tutorName),
+            isThreeLine: true,
+            subtitle: Text(record.date),
+            onTap: null,
+          ),
         ),
       ),
     );
   }
 
-    // Filtering function for the list builder
+  void _addAppointment() {
+    // TODO: Add appointment to specific user
+  }
+
+  // Filtering function for the list builder
   bool _filterList(snapshot) {
     if (_searchText == "" || _searchText == null) {
       return true;
@@ -90,7 +119,7 @@ class _AppointmentPage extends State<AppointmentPage> {
     }
   }
 
-    // Search Bar widget
+  // Search Bar widget
   TextField _searchBar() {
     return TextField(
       autofocus: true,
@@ -102,7 +131,7 @@ class _AppointmentPage extends State<AppointmentPage> {
     );
   }
 
-    // Search Listener
+  // Search Listener
   void _searchListener() {
     if (_filter.text.isEmpty) {
       setState(() {
@@ -116,14 +145,15 @@ class _AppointmentPage extends State<AppointmentPage> {
     print(_searchText);
   }
 
-    // Sets the state of the search icon, by flipping the _searching boolean
+  // Sets the state of the search icon, by flipping the _searching boolean
   void _searchAppointment() {
+    if (_searching) {
+      setState(() => _searchText = "");
+    }
     setState(() => _searching = !_searching);
   }
 
-
   final Auth _auth = Auth();
-
 
   @override
   void dispose() {
@@ -132,21 +162,12 @@ class _AppointmentPage extends State<AppointmentPage> {
     _filter.dispose();
     super.dispose();
   }
-  
 
   // Function which automatically shows or hides the floating button
   // based on the tab the user is on
-  FloatingActionButton _inAppointmentsTab() {
-    return FloatingActionButton(
-        backgroundColor: Theme.of(context).primaryColor,
-        child: _searching ? Icon(Icons.close) : Icon(Icons.search),
-        onPressed: _searchAppointment);
-  } 
-
-
 
   Widget build(BuildContext context) {
-      return Scaffold(
+    return Scaffold(
       appBar: AppBar(
         title: _searching ? _searchBar() : Text('Home'),
         actions: <Widget>[
@@ -160,8 +181,10 @@ class _AppointmentPage extends State<AppointmentPage> {
         ],
       ),
       body: _buildBody(context),
-      floatingActionButton: _inAppointmentsTab(),
+      floatingActionButton: FloatingActionButton(
+          backgroundColor: Theme.of(context).primaryColor,
+          child: _searching ? Icon(Icons.close) : Icon(Icons.search),
+          onPressed: _searchAppointment),
     );
   }
-
 }
