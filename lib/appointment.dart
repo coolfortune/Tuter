@@ -1,27 +1,32 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:Tuter/users.dart';
 
-class Appointment extends StatelessWidget {
+class Appointment {
   final String className;
   final String time;
   final String date;
-  final String tutor;
+  final String tutorName;
+  final DocumentReference reference;
 
-  Appointment({this.className, this.time, this.date, this.tutor});
+  Appointment({this.className, this.time, this.date, this.tutorName, this.reference});
+
+  Appointment.fromMap(Map<String, dynamic> map, {this.reference})
+    :assert(map['className'] != null),
+    assert(map['time'] != null),
+    //assert(map['tuterName'] != null),
+    className = map['className'],
+    time = map['time'],
+    date = map['date'],
+    tutorName = map['tutorName'];
+   
+
+
+    Appointment.fromSnapshot(DocumentSnapshot snapshot)
+      :this.fromMap(snapshot.data, reference: snapshot.reference);
+
 
   @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Container(
-          padding: EdgeInsets.all(15.0),
-          child: Text('$className: $date, $time ($tutor)',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-        Divider(),
-      ],
-    );
-  }
+ String toString() => "Appointment<$className:$time:$date:$tutorName>";
+
 }
