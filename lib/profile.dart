@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:Tuter/auth.dart';
+import 'package:Tuter/backend/auth.dart';
 
 
 class ProfilePage extends StatefulWidget {

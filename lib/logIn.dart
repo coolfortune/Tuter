@@ -1,18 +1,16 @@
-import 'package:Tuter/auth.dart';
+import 'package:Tuter/backend/auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:Tuter/customTextField.dart';
 import 'package:Tuter/login-buttons.dart';
 import 'package:Tuter/signup.dart';
 import 'package:Tuter/forgot-password.dart';
-import 'package:Tuter/home.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 class LogIn extends StatefulWidget {
   @override
   _LogInState createState() => _LogInState();
 }
-
+// goes to a given page with a given direction
 Future navigateToPage(context, direction, page) async {
   Navigator.of(context).push(_createRoute(direction, page));
 }
@@ -38,6 +36,7 @@ Route _createRoute(direction, page) {
 
 enum Direction { left, right }
 
+// where the log in page starts
 class _LogInState extends State<LogIn> {final _formKey = GlobalKey<FormState>();
 
   final Auth _auth = Auth();
@@ -45,7 +44,6 @@ class _LogInState extends State<LogIn> {final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-   
     return Scaffold(
       body: Center(
         child: SingleChildScrollView(
@@ -55,7 +53,7 @@ class _LogInState extends State<LogIn> {final _formKey = GlobalKey<FormState>();
               SizedBox(height: 30.0),
               Row(
                 children: <Widget>[
-                  Image(
+                  Image(                               // Tutor Logo
                     image: AssetImage('lib/images/tuterLogo.png'),
                     height: 130.0,
                     width: 350.0,
@@ -67,16 +65,15 @@ class _LogInState extends State<LogIn> {final _formKey = GlobalKey<FormState>();
                 key: _formKey,
                 child: Column(
                   children: <Widget>[
-                    CustomTextField(
+                    CustomTextField(        // email text box
                       hint: 'Email',
-                      //password: false
                       validator: (input) => input.isEmpty ? "Required" : null,
                       onSaved: (value) => _email = value.trim().toLowerCase(),
                     ),
                     SizedBox(
                       height: 10.0,
                     ),
-                    CustomTextField(
+                    CustomTextField(        // password text box
                       hint: 'Password',
                       password: true,
                       validator: (input) => input.isEmpty ? "Required" : null,
@@ -86,7 +83,7 @@ class _LogInState extends State<LogIn> {final _formKey = GlobalKey<FormState>();
                 ),
               ),
               SizedBox(height: 25.0),
-              LoginButton(
+              LoginButton(                 // log in button
                 text: 'Login',
                 onPressed: () async{
                   final form = _formKey.currentState;
@@ -101,7 +98,7 @@ class _LogInState extends State<LogIn> {final _formKey = GlobalKey<FormState>();
               ),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 35.0, vertical: 8.0),
-                child: RawMaterialButton(
+                child: RawMaterialButton(               // log in with google button
                   fillColor: Colors.lightBlue[800],
                   elevation: 2.0,
                   child: Padding(
@@ -130,7 +127,7 @@ class _LogInState extends State<LogIn> {final _formKey = GlobalKey<FormState>();
                   onPressed: () => null,
                 ),
               ),
-              FlatButton(
+              FlatButton(           // forgot password button
                 onPressed: () =>
                     navigateToPage(context, Direction.left, ForgotPage()),
                 child: Text(
@@ -144,7 +141,7 @@ class _LogInState extends State<LogIn> {final _formKey = GlobalKey<FormState>();
                   fontSize: 17.0,
                 ),
               ),
-              LoginButton(
+              LoginButton(            // sign up button
                   text: 'Sign Up',
                   padding: 110.0,
                   onPressed: () =>
@@ -158,16 +155,4 @@ class _LogInState extends State<LogIn> {final _formKey = GlobalKey<FormState>();
     );
   }
 
-  // Future<void> logIn() async {
-  //   final formState = _formKey.currentState;
-  //     if(formState.validate()){
-  //       formState.save();
-  //       try{
-  //         AuthResult user = await FirebaseAuth.instance.signInWithEmailAndPassword(email: _email, password: _password);
-  //        // navigateToPage(context, Direction.right, HomePage());
-  //       }catch(e){
-  //         print(e.toString());
-  //       }
-  //     }
-  // }
 }
