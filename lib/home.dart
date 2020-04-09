@@ -1,13 +1,14 @@
 import 'package:Tuter/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:Tuter/appointment-page.dart';
+import 'package:Tuter/home-page.dart';
 
-class HomePage extends StatefulWidget {
+class NavBar extends StatefulWidget {
   @override
-  _HomePage createState() => new _HomePage();
+  _NavBar createState() => new _NavBar();
 }
 
-class _HomePage extends State<HomePage> with SingleTickerProviderStateMixin {
+class _NavBar extends State<NavBar> with SingleTickerProviderStateMixin {
 
   int _selectedIndex = 0;
 
@@ -18,6 +19,7 @@ class _HomePage extends State<HomePage> with SingleTickerProviderStateMixin {
   }
 
   final List<Widget> _children = [
+    HomePage(),
     AppointmentPage(),
     ProfilePage(),
   ];
@@ -28,6 +30,10 @@ class _HomePage extends State<HomePage> with SingleTickerProviderStateMixin {
       body: _children[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            title: Text('Home'),
+          ),
           BottomNavigationBarItem(
             icon: Icon(Icons.assignment),
             title: Text('Appointments'),

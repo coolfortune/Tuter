@@ -190,7 +190,7 @@ class _AppointmentPage extends State<AppointmentPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: _searching ? _searchBar() : Text('Home'),
+        title: _searching ? _searchBar() : Text('Appointments'),
         actions: <Widget>[
           FlatButton.icon(
             icon: Icon(Icons.person),
