@@ -7,6 +7,8 @@ import 'package:Tuter/backend/auth.dart';
 import 'package:Tuter/Models/user.dart';
 
 class AppointmentPage extends StatefulWidget {
+  const AppointmentPage({Key key}) : super(key: key);
+  
   @override
   _AppointmentPage createState() => new _AppointmentPage();
 }

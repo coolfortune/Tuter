@@ -9,7 +9,6 @@ class NavBar extends StatefulWidget {
 }
 
 class _NavBar extends State<NavBar> with SingleTickerProviderStateMixin {
-
   int _selectedIndex = 0;
 
   void _onItemTapped(int index) {
@@ -19,15 +18,26 @@ class _NavBar extends State<NavBar> with SingleTickerProviderStateMixin {
   }
 
   final List<Widget> _children = [
-    HomePage(),
-    AppointmentPage(),
-    ProfilePage(),
+    HomePage(
+      key: PageStorageKey('Home Page'),
+    ),
+    AppointmentPage(
+      key: PageStorageKey('Appointment Page'),
+    ),
+    ProfilePage(
+      key: PageStorageKey('Profile Page'),
+    ),
   ];
+
+  final PageStorageBucket bucket = PageStorageBucket();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _children[_selectedIndex],
+      body: PageStorage(
+        child: _children[_selectedIndex],
+        bucket: bucket,
+      ),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
@@ -49,5 +59,4 @@ class _NavBar extends State<NavBar> with SingleTickerProviderStateMixin {
       ),
     );
   }
-
 }
