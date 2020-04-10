@@ -99,8 +99,16 @@ class _HomePage extends State<HomePage> {
         padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
         child: Container(
           decoration: BoxDecoration(
+            boxShadow: [BoxShadow(
+              color: Colors.grey,
+              offset: Offset(3.0, 3.0),
+              blurRadius: 3.0,
+            )],
             gradient: LinearGradient(colors: [Colors.white, Colors.grey[300]]),
-            border: Border.all(color: Colors.grey),
+            border: Border.all(
+              color: Colors.grey,
+              style: BorderStyle.none
+              ),
             borderRadius: BorderRadius.circular(5.0),
           ),
           child: ListTile(
@@ -132,6 +140,7 @@ class _HomePage extends State<HomePage> {
 
     Navigator.of(context).pop();
     Scaffold.of(context).showSnackBar(SnackBar(
+        behavior: SnackBarBehavior.floating,
         backgroundColor: Colors.grey[200],
         content: Text(
           'Appointment added successfully!',
@@ -205,6 +214,7 @@ class _HomePage extends State<HomePage> {
       ),
       body: _buildBody(context),
       floatingActionButton: FloatingActionButton(
+        clipBehavior: Clip.antiAlias,
         backgroundColor: Theme.of(context).primaryColor,
         child: _searching ? Icon(Icons.close) : Icon(Icons.search),
         onPressed: _searchAppointment,

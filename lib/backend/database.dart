@@ -33,6 +33,13 @@ class DatabaseService {
     });
   }
 
+  Future<void> deleteAppointment(String uid, Appointment record) async {
+    final DocumentReference reference = record.reference;
+
+    return await studentCollection.document(uid).updateData({
+      'appointments': FieldValue.arrayRemove([reference])
+    });
+  }
   Future<void> updateTutorData(
       String email, String firstName, String lastName, String major) async {
     return await tutorCollection.document(uid).setData({
