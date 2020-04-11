@@ -19,9 +19,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  firebase_auth: ^0.15.5+3
-  provider: ^4.0.4
-  cloud_firestore: ^0.13.4+2
+  firebase_auth: ^0.15.5+3      # used in authentication
+  provider: ^4.0.4              # used for authentication changes
+  cloud_firestore: ^0.13.4+2    # used to set data in database
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

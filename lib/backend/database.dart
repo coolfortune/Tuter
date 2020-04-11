@@ -31,8 +31,34 @@ class DatabaseService {
       'positiveRatings': 0,
       'totalRatings': 0,
       'verified': false,
+      'userType': true,
     });
   }
+
+  Future<bool> getUserType(String uid) async {
+    bool isTutor = false;
+
+    try 
+    {
+    await Firestore.instance.
+          collection('Tutors')
+          .document(uid)
+          .get()
+          .then((DocumentSnapshot doc){
+            if (doc.exists)
+                isTutor = true;
+    });
+
+    return isTutor;
+    }
+    catch(e)
+    {
+      print(e.toString());
+    }
+  }
+
+  
+
 
   Stream<QuerySnapshot> get students {
     return studentCollection.snapshots();
