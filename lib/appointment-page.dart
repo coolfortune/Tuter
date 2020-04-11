@@ -60,7 +60,7 @@ class _AppointmentPage extends State<AppointmentPage> {
             );
           else if (!snapshot.hasData) return LinearProgressIndicator();
 
-          final List<dynamic> refList = snapshot.data.data['appointments'];
+          final List<dynamic> refList = snapshot.data.data['appointments'] ?? [];
 
           return refList.isEmpty
               ? Column(
