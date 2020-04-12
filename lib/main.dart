@@ -1,13 +1,25 @@
+import 'package:Tuter/backend/api_service.dart';
 import 'package:Tuter/backend/auth.dart';
 import 'package:Tuter/wrapper.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
-void main() => runApp(MyApp());
 
 
+
+void setupLocator() {
+  GetIt.I.registerSingleton(() => API_service());
+}
+
+
+void main() 
+{
+  setupLocator();
+  runApp(MyApp());
+}
 Future navigateToPage(context, direction, page) async {
   Navigator.of(context).push(_createRoute(direction, page));
 }
