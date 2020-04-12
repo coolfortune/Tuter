@@ -1,4 +1,5 @@
 import 'package:Tuter/backend/auth.dart';
+import 'package:Tuter/loading.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:Tuter/customTextField.dart';
@@ -41,10 +42,11 @@ class _LogInState extends State<LogIn> {final _formKey = GlobalKey<FormState>();
 
   final Auth _auth = Auth();
   String _email, _password;
+  bool loading = false;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return loading ? Loading() : Scaffold(
       body: Center(
         child: SingleChildScrollView(
           child: Column(
@@ -89,10 +91,16 @@ class _LogInState extends State<LogIn> {final _formKey = GlobalKey<FormState>();
                   final form = _formKey.currentState;
                   if(_formKey.currentState.validate())
                     {
+                      setState(() => loading = true);
                       form.save();
                       dynamic result = await _auth.logIn(_email, _password);
-                      if(result == null)
-                        print('Email or password is incorrect');
+                      if(result == null){
+                        setState(() {
+                          print('Email or password is incorrect');
+                          loading = false;
+                        });
+
+                      }
                     }
                 }
               ),
