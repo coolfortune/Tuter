@@ -8,6 +8,8 @@ class DatabaseService {
   DatabaseService({this.uid});
 
   // collection reference
+  final CollectionReference appointmentsCollection =
+      Firestore.instance.collection('Appointments');
   final CollectionReference studentCollection =
       Firestore.instance.collection('Students');
   final CollectionReference tutorCollection =
@@ -25,6 +27,14 @@ class DatabaseService {
     });
   }
 
+  Future<void> makeAppointment(String uid, Appointment record) {
+    return appointmentsCollection.document(uid).setData({
+      'className': record.className,
+      'startTime': record.startTime,
+      'endTime': record.endTime,
+    }, merge: true);
+  }
+
   Future<void> addAppointment(String uid, Appointment record) async {
     final DocumentReference reference = record.reference;
 
@@ -40,6 +50,7 @@ class DatabaseService {
       'appointments': FieldValue.arrayRemove([reference])
     });
   }
+
   Future<void> updateTutorData(
       String email, String firstName, String lastName, String major) async {
     return await tutorCollection.document(uid).setData({

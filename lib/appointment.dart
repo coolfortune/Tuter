@@ -7,6 +7,8 @@ class Appointment {
   final String tutorName;
   final double positiveRatings;
   final double totalRatings;
+  final Timestamp startTime;
+  final Timestamp endTime;
 
   final DocumentReference reference;
 
@@ -15,20 +17,27 @@ class Appointment {
       this.totalRatings,
       this.className,
       this.time,
+      this.startTime,
+      this.endTime,
       this.date,
       this.tutorName,
       this.reference});
 
   Appointment.fromMap(Map<String, dynamic> map, {this.reference})
       : assert(map['className'] != null),
-        assert(map['time'] != null),
+        //assert(map['time'] != null),
+        assert(map['startTime'] != null),
+        assert(map['endTime'] != null),
         //assert(map['tuterName'] != null),
         className = map['className'],
         time = map['time'],
         date = map['date'],
         tutorName = map['tutorName'],
         positiveRatings = map['positiveRatings'],
-        totalRatings = map['totalRatings'];
+        totalRatings = map['totalRatings'],
+
+        startTime = map['startTime'],
+        endTime = map['endTime'];
 
   Appointment.fromSnapshot(DocumentSnapshot snapshot)
       : this.fromMap(snapshot.data, reference: snapshot.reference);

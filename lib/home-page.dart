@@ -4,11 +4,11 @@ import 'package:Tuter/appointment.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:Tuter/backend/auth.dart';
-import 'package:Tuter/Models/user.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key key}) : super(key: key);
-  
+
   @override
   _HomePage createState() => new _HomePage();
 }
@@ -18,6 +18,16 @@ class _HomePage extends State<HomePage> {
   final TextEditingController _filter = TextEditingController();
   bool _searching = false;
   final Auth _auth = Auth();
+
+  final List<String> weekday = [
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+    'Sunday'
+  ];
 
   @override
   void initState() {
@@ -62,8 +72,26 @@ class _HomePage extends State<HomePage> {
             .toList());
   }
 
-  Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
-    final record = Appointment.fromSnapshot(data);
+  Widget _buildListItem(BuildContext context, DocumentSnapshot snapshot) {
+    final record = Appointment.fromSnapshot(snapshot);
+
+    final int startHour = record.startTime.toDate().hour;
+    final int startMinute = record.startTime.toDate().minute;
+    final String startTime =
+        (startHour > 9 ? startHour.toString() : '0' + startHour.toString()) +
+            ':' +
+            (startMinute > 9
+                ? startMinute.toString()
+                : '0' + startMinute.toString());
+
+    final int endHour = record.endTime.toDate().hour;
+    final int endMinute = record.endTime.toDate().minute;
+    final String endTime =
+        (endHour > 9 ? endHour.toString() : '0' + endHour.toString()) +
+            ':' +
+            (endMinute > 9 ? endMinute.toString() : '0' + endMinute.toString());
+
+    final String weekdayName = weekday[record.startTime.toDate().weekday];
 
     return PopupMenuButton(
       itemBuilder: (context) => [
@@ -80,7 +108,7 @@ class _HomePage extends State<HomePage> {
               return AlertDialog(
                 title: Text('Confirm Appointment?'),
                 content: Text(
-                    '${record.className} with ${record.tutorName} on\n${record.date} at ${record.time}?'),
+                    '${record.className} with ${record.tutorName} on\n$weekdayName at $startTime - $endTime?'),
                 actions: <Widget>[
                   FlatButton(
                       textColor: Colors.amber,
@@ -99,20 +127,19 @@ class _HomePage extends State<HomePage> {
         padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
         child: Container(
           decoration: BoxDecoration(
-            boxShadow: [BoxShadow(
-              color: Colors.grey,
-              offset: Offset(3.0, 3.0),
-              blurRadius: 3.0,
-            )],
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey,
+                offset: Offset(3.0, 3.0),
+                blurRadius: 3.0,
+              )
+            ],
             gradient: LinearGradient(colors: [Colors.white, Colors.grey[300]]),
-            border: Border.all(
-              color: Colors.grey,
-              style: BorderStyle.none
-              ),
+            border: Border.all(color: Colors.grey, style: BorderStyle.none),
             borderRadius: BorderRadius.circular(5.0),
           ),
           child: ListTile(
-            title: Text(record.time),
+            title: Text(startTime + ' - ' + endTime),
             leading: Text(
               record.className,
               style: TextStyle(
@@ -121,7 +148,7 @@ class _HomePage extends State<HomePage> {
             ),
             trailing: Text(record.tutorName),
             isThreeLine: true,
-            subtitle: Text(record.date),
+            subtitle: Text(weekdayName),
             onTap: null,
           ),
         ),
@@ -149,6 +176,7 @@ class _HomePage extends State<HomePage> {
           ),
         )));
   }
+
 
   // Filtering function for the list builder
   bool _filterList(snapshot) {
@@ -194,6 +222,7 @@ class _HomePage extends State<HomePage> {
     }
     setState(() => _searching = !_searching);
   }
+
 
   // Function which automatically shows or hides the floating button
   // based on the tab the user is on
