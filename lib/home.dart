@@ -1,15 +1,27 @@
 import 'package:Tuter/profile.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:Tuter/appointment-page.dart';
 import 'package:Tuter/home-page.dart';
 
+
 class NavBar extends StatefulWidget {
+
+  final bool isTutor;
+  NavBar({this.isTutor});
+
   @override
-  _NavBar createState() => new _NavBar();
+  _NavBar createState() => new _NavBar(isTutor);
+
 }
 
 class _NavBar extends State<NavBar> with SingleTickerProviderStateMixin {
   int _selectedIndex = 0;
+  static bool isTutor;
+
+  _NavBar(bool res){
+    isTutor = res;
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -17,7 +29,8 @@ class _NavBar extends State<NavBar> with SingleTickerProviderStateMixin {
     });
   }
 
-  final List<Widget> _children = [
+
+  final List<Widget> _childrenStudent = [
     HomePage(
       key: PageStorageKey('Home Page'),
     ),
@@ -26,6 +39,20 @@ class _NavBar extends State<NavBar> with SingleTickerProviderStateMixin {
     ),
     ProfilePage(
       key: PageStorageKey('Profile Page'),
+      isTutor: false,
+    ),
+  ];
+
+  final List<Widget> _childrenTutor = [
+    HomePage(
+      key: PageStorageKey('Home Page'),
+    ),
+    AppointmentPage(
+      key: PageStorageKey('Appointment Page'),
+    ),
+    ProfilePage(
+      key: PageStorageKey('Profile Page'),
+      isTutor: true,
     ),
   ];
 
@@ -35,7 +62,7 @@ class _NavBar extends State<NavBar> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       body: PageStorage(
-        child: _children[_selectedIndex],
+        child: isTutor ? _childrenTutor[_selectedIndex] : _childrenStudent[_selectedIndex],
         bucket: bucket,
       ),
       bottomNavigationBar: BottomNavigationBar(
