@@ -1,41 +1,56 @@
-import 'package:Tuter/backend/database.dart';
+import 'package:Tuter/backend/auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:Tuter/appointment.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:Tuter/backend/auth.dart';
+
+import 'appointment.dart';
+import 'backend/database.dart';
 
 class AppointmentPage extends StatefulWidget {
+  const AppointmentPage({Key key}) : super(key: key);
   @override
   _AppointmentPage createState() => new _AppointmentPage();
 }
 
 class _AppointmentPage extends State<AppointmentPage> {
-  String _searchText;
-  final TextEditingController _filter = TextEditingController();
-  bool _searching = false;
-  final Auth _auth = Auth();
+  Auth _auth = Auth();
 
+  String uid;
+  FirebaseUser user;
   @override
   void initState() {
     super.initState();
 
-    // Listener for search text
-    _filter.addListener(_searchListener);
+    FirebaseAuth.instance.currentUser().then((user) {
+      setState(() {
+        uid = user.uid;
+      });
+    }).catchError((onError) => print(onError.toString()));
   }
 
-  @override
-  void dispose() {
-    // Clean up the controller when the widget is removed from the widget tree.
-    // This also removes the _searchListener listener.
-    _filter.dispose();
-    super.dispose();
+  void _deleteAppointment(record) async {
+
+    DatabaseService(uid: uid)
+        .deleteAppointment(uid, record)
+        .then((value) => print('Appointment deleted successfully'))
+        .catchError((onError) => print(onError));
+
+    Navigator.of(context).pop();
+    Scaffold.of(context).showSnackBar(SnackBar(
+        backgroundColor: Colors.grey[200],
+        behavior: SnackBarBehavior.floating,
+        content: Text(
+          'Appointment deleted',
+          style: TextStyle(
+            color: Colors.black,
+          ),
+        )));
   }
 
   Widget _buildBody(BuildContext context) {
-    return StreamBuilder<QuerySnapshot>(
-        stream: Firestore.instance.collection('Appointments').snapshots(),
-        builder: (context, snapshot) {
+    return StreamBuilder<DocumentSnapshot>(
+        stream: Firestore.instance.document('Students/' + '$uid').snapshots(),
+        builder: (BuildContext context, snapshot) {
           if (snapshot.hasError)
             return Text(
               'Internal Error',
@@ -45,28 +60,62 @@ class _AppointmentPage extends State<AppointmentPage> {
             );
           else if (!snapshot.hasData) return LinearProgressIndicator();
 
-          return _buildList(context, snapshot.data.documents);
+          final List<dynamic> refList = snapshot.data.data['appointments'] ?? [];
+
+          return refList.isEmpty
+              ? Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Center(child: Text('No Saved Appointments',
+                    style: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 20.0,
+                    ),
+                  )),
+                ],
+              )
+              : ListView(
+                  padding: EdgeInsets.only(top: 20.0),
+                  children: refList
+                      .map((ref) => _buildList(context, ref.get().asStream()))
+                      .toList());
         });
   }
 
-  Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {
-    return ListView(
-        padding: EdgeInsets.only(top: 20.0),
-        // Filters based on your search query; returns everything if empty
-        children: snapshot
-            .where(_filterList)
-            .map((data) => _buildListItem(context, data))
-            .toList());
-  }
+  Widget _buildList(
+      BuildContext context, Stream<DocumentSnapshot> snapshotStream) {
+    return StreamBuilder<DocumentSnapshot>(
+      stream: snapshotStream,
+      builder: (BuildContext context, snapshot) {
+        if (snapshot.hasError)
+          return Text(
+            'Internal Error',
+            style: TextStyle(
+              color: Colors.red,
+            ),
+          );
+        else if (!snapshot.hasData) return LinearProgressIndicator();
 
-  Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
-    final record = Appointment.fromSnapshot(data);
+        return _buildListItem(context, snapshot.data);
+      },
+    );
+  }
+  //  Widget _processRef(DocumentReference ref) {
+  //    ref
+  //        .snapshots()
+  //        .then((snapshot) => Appointment.fromSnapshot(snapshot))
+  //        .then((appointment) => _buildListItem(context, appointment))
+  //        .catchError((onError) => print(onError));
+  //  }
+
+  Widget _buildListItem(BuildContext context, DocumentSnapshot snapshot) {
+    final record = Appointment.fromSnapshot(snapshot);
 
     return PopupMenuButton(
       itemBuilder: (context) => [
         PopupMenuItem(
           value: 1,
-          child: Text('Add Appointment'),
+          child: Text('Delete Appointment'),
         ),
       ],
       offset: Offset(1.0, 0),
@@ -75,13 +124,13 @@ class _AppointmentPage extends State<AppointmentPage> {
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
-                title: Text('Confirm Appointment?'),
-                content: Text(
-                    '${record.className} with ${record.tutorName} on\n${record.date} at ${record.time}?'),
+                title: Text('Confirm Deletion?'),
+                //content: Text(
+                //  '${record.className} with ${record.tutorName} on\n${record.date} at ${record.time}?'),
                 actions: <Widget>[
                   FlatButton(
                       textColor: Colors.amber,
-                      onPressed: () => _addAppointment(record),
+                      onPressed: () => _deleteAppointment(record),
                       child: Text('Yes')),
                   FlatButton(
                       textColor: Colors.amber,
@@ -96,111 +145,39 @@ class _AppointmentPage extends State<AppointmentPage> {
         padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
         child: Container(
           decoration: BoxDecoration(
-            gradient: LinearGradient(colors: [Colors.white, Colors.grey[300]]),
-            border: Border.all(color: Colors.grey),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey,
+                offset: Offset(3.0, 3.0),
+                blurRadius: 3.0,
+              )
+            ],
+            color: Colors.green[400],
+            border: Border.all(color: Colors.grey, style: BorderStyle.none),
             borderRadius: BorderRadius.circular(5.0),
           ),
           child: ListTile(
             title: Text(record.time),
-            leading: Column(
-              children: <Widget>[
-                Text(record.className),
-                _addedAppointment(record)
-                    ? Text(
-                        'Added',
-                        style: TextStyle(
-                          color: Colors.green[800],
-                          fontWeight: FontWeight.bold,
-                        ),
-                      )
-                    : null,
-              ],
+            leading: Text(
+              record.className,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
             ),
             trailing: Text(record.tutorName),
             isThreeLine: true,
             subtitle: Text(record.date),
             onTap: null,
-            dense: true,
           ),
         ),
       ),
     );
   }
 
-  void _addAppointment(record) async {
-    FirebaseUser user = await FirebaseAuth.instance.currentUser();
-    String uid = user.uid;
-
-    DatabaseService(uid: uid)
-        .addAppointment(uid, record)
-        .then((value) => print('Appointment added successfully'))
-        .catchError((onError) => print(onError));
-
-    Navigator.of(context).pop();
-  }
-
-  bool _addedAppointment(Appointment record) {
-    FirebaseUser user = FirebaseAuth.instance.currentUser();
-    String uid = user.uid;
-
-    return true;
-
-    
-    
-  }
-
-  // Filtering function for the list builder
-  bool _filterList(snapshot) {
-    if (_searchText == "" || _searchText == null) {
-      return true;
-    } else {
-      return snapshot.data['className']
-          .toLowerCase()
-          .contains(_searchText.toLowerCase());
-    }
-  }
-
-  // Search Bar widget
-  TextField _searchBar() {
-    return TextField(
-      autofocus: true,
-      controller: _filter,
-      decoration: InputDecoration(
-        prefixIcon: Icon(Icons.search),
-        hintText: 'Search...',
-      ),
-    );
-  }
-
-  // Search Listener
-  void _searchListener() {
-    if (_filter.text.isEmpty) {
-      setState(() {
-        _searchText = "";
-      });
-    } else {
-      setState(() {
-        _searchText = _filter.text;
-      });
-    }
-    print(_searchText);
-  }
-
-  // Sets the state of the search icon, by flipping the _searching boolean
-  void _searchAppointment() {
-    if (_searching) {
-      setState(() => _searchText = "");
-    }
-    setState(() => _searching = !_searching);
-  }
-
-  // Function which automatically shows or hides the floating button
-  // based on the tab the user is on
-
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: _searching ? _searchBar() : Text('Home'),
+        title: Text('Appointments'),
         actions: <Widget>[
           FlatButton.icon(
             icon: Icon(Icons.person),
@@ -212,11 +189,6 @@ class _AppointmentPage extends State<AppointmentPage> {
         ],
       ),
       body: _buildBody(context),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Theme.of(context).primaryColor,
-        child: _searching ? Icon(Icons.close) : Icon(Icons.search),
-        onPressed: _searchAppointment,
-      ),
     );
   }
 }
