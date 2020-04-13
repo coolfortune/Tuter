@@ -1,10 +1,13 @@
 import 'package:Tuter/backend/database.dart';
+import 'package:Tuter/qrCodeGenerator.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:Tuter/appointment.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:Tuter/backend/auth.dart';
+import 'package:barcode_scan/barcode_scan.dart';
 import 'package:Tuter/Models/user.dart';
+import 'package:flutter/services.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key key}) : super(key: key);
@@ -18,6 +21,7 @@ class _HomePage extends State<HomePage> {
   final TextEditingController _filter = TextEditingController();
   bool _searching = false;
   final Auth _auth = Auth();
+  String _scanResult;
 
   @override
   void initState() {
@@ -198,6 +202,38 @@ class _HomePage extends State<HomePage> {
   // Function which automatically shows or hides the floating button
   // based on the tab the user is on
 
+  // scans QR code
+  Future scan() async{
+
+    try{
+      String scanResult = await BarcodeScanner.scan();
+      setState(() {
+        _scanResult = scanResult;
+      });
+    } on PlatformException catch(e)
+    {
+      if (e.code == BarcodeScanner.CameraAccessDenied)
+        print('User denied camera acces');
+    else print('Unknown Error');
+    }
+    on FormatException{
+      print('User backed out of camera');
+    }
+  }
+
+  void selected(int selection){
+
+      if(selection == 1)
+      {
+        scan();
+        // go to review page
+      }
+     else if (selection == 2)
+      {
+        Navigator.push( context, MaterialPageRoute(builder: (context) => GenerateScreen(uid: 'appointment id')));
+      }
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -209,6 +245,20 @@ class _HomePage extends State<HomePage> {
             onPressed: () async {
               await _auth.logOut();
             },
+          ),
+          PopupMenuButton<int>(
+            icon: Icon(Icons.filter_center_focus),
+            onSelected: selected,
+            itemBuilder: (BuildContext context) => <PopupMenuEntry<int>>[
+              const PopupMenuItem<int>(
+                value: 1,
+                child: Text('Scan QR Code')
+              ),
+              const PopupMenuItem<int>(
+                value: 2,
+                child: Text('Create QR Code')
+                )
+            ]
           )
         ],
       ),
