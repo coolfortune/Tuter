@@ -1,10 +1,10 @@
 import 'dart:io';
 import 'package:path/path.dart' as Path; 
+import 'package:Tuter/make-appointment.dart';
 import 'package:flutter/material.dart';
 import 'package:Tuter/backend/auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';  
 import 'package:image_picker/image_picker.dart';   
-
 
 
 class ProfilePage extends StatefulWidget {
@@ -13,12 +13,10 @@ class ProfilePage extends StatefulWidget {
   const ProfilePage({Key key, this.isTutor}) : super(key: key);
   
   @override
-
   _ProfilePage createState() => _ProfilePage();
 }
 
 class _ProfilePage extends State<ProfilePage> {
-
   final Auth _auth = Auth();
   File _image = null;
   String _uploadedFileURL;
@@ -106,7 +104,9 @@ class _ProfilePage extends State<ProfilePage> {
           ),
         ],
       ),
-      );
+      body: MakeAppointment()
+    );
+        
   }
 }
 
