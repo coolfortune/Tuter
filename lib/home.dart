@@ -8,15 +8,20 @@ import 'package:Tuter/home-page.dart';
 class NavBar extends StatefulWidget {
 
   final bool isTutor;
+  NavBar({this.isTutor});
 
   @override
-  _NavBar createState() => new _NavBar();
+  _NavBar createState() => new _NavBar(isTutor);
 
-  NavBar({this.isTutor});
 }
 
 class _NavBar extends State<NavBar> with SingleTickerProviderStateMixin {
   int _selectedIndex = 0;
+  static bool isTutor;
+
+  _NavBar(bool res){
+    isTutor = res;
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -24,7 +29,8 @@ class _NavBar extends State<NavBar> with SingleTickerProviderStateMixin {
     });
   }
 
-  final List<Widget> _children = [
+
+  final List<Widget> _childrenStudent = [
     HomePage(
       key: PageStorageKey('Home Page'),
     ),
@@ -37,13 +43,26 @@ class _NavBar extends State<NavBar> with SingleTickerProviderStateMixin {
     ),
   ];
 
+  final List<Widget> _childrenTutor = [
+    HomePage(
+      key: PageStorageKey('Home Page'),
+    ),
+    AppointmentPage(
+      key: PageStorageKey('Appointment Page'),
+    ),
+    ProfilePage(
+      key: PageStorageKey('Profile Page'),
+      isTutor: true,
+    ),
+  ];
+
   final PageStorageBucket bucket = PageStorageBucket();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: PageStorage(
-        child: _children[_selectedIndex],
+        child: isTutor ? _childrenTutor[_selectedIndex] : _childrenStudent[_selectedIndex],
         bucket: bucket,
       ),
       bottomNavigationBar: BottomNavigationBar(

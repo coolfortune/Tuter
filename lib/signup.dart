@@ -37,12 +37,12 @@ class _SignupPage extends State<SignupPage> {
         setState(() => loading = true);
         print('registering student');
         dynamic result = await _auth.registerStudent(_email.trim(), _password, _firstName, _lastName, _major);
+        setState(() => loading = false);
         if (result == null)
         {
           setState(() 
           {
             print('registration failed');
-            loading = false;
           });
         }
       }
@@ -52,12 +52,12 @@ class _SignupPage extends State<SignupPage> {
         setState(() => loading = true);
         print('registering tutor');
         dynamic result = await _auth.registerTutor(_email.trim(), _password, _firstName, _lastName, _major);
+        setState(() => loading = false);
         if (result == null)
         {
           setState(() 
           {
             print('registration failed');
-            loading = false;
           });
         }
       }

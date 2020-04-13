@@ -5,38 +5,26 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:Tuter/home.dart';
 
-enum userType{student, tutor}
 
-class Wrapper extends StatefulWidget {
+class Wrapper extends StatelessWidget {
   @override
-  _WrapperState createState() => _WrapperState();
-}
-
-class _WrapperState extends State<Wrapper> {
-
-  bool isTutor;
-  FirebaseUser user;
-  
+  Widget build(BuildContext context) {
   final db = DatabaseService();
 
-  Widget build(BuildContext context) {
-    setState(() {
-      user =  Provider.of<FirebaseUser>(context);
-      if (user != null)
-          db.getUserType(user.uid).then((res){
-            setState(() {
-              isTutor = res;
-             });
-           });
-    });
+    Future userType;
+    FirebaseUser user = Provider.of<FirebaseUser>(context);
+    if (user != null)
+      userType = db.getUserType(user.uid);
+    else userType = null;
 
-    // decide to either go to log in or home page
-    if (user == null)
-      return LogIn();
+    return FutureBuilder(
+      future:userType,
+      builder: (BuildContext context, AsyncSnapshot snapshot){
 
-    else if(isTutor)
-      return NavBar(isTutor: true);
-
-    else return NavBar(isTutor: false);
+        if(snapshot.connectionState == ConnectionState.done)
+            return NavBar(isTutor: snapshot.data);
+        else return LogIn();
+      }
+    );
   }
 }
