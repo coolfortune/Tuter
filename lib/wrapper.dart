@@ -1,9 +1,13 @@
+<<<<<<< HEAD
 import 'package:Tuter/backend/database.dart';
 import 'package:Tuter/home.dart';
+=======
+>>>>>>> 87e02feeddac1bb9b2a88ca02c7b6d925d7610a5
 import 'package:Tuter/logIn.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:Tuter/home.dart';
 
 
 class Wrapper extends StatelessWidget {
@@ -21,6 +25,7 @@ class Wrapper extends StatelessWidget {
     }
     
     else 
+<<<<<<< HEAD
     {
       bool tutorHomepage = false;
 
@@ -42,6 +47,9 @@ class Wrapper extends StatelessWidget {
       // TODO: return tutorHomepage ? TutorHomePage() : StudentHomePage();
       return (tutorHomepage) ? HomePage() : LogIn();
     }
+=======
+    return NavBar();
+>>>>>>> 87e02feeddac1bb9b2a88ca02c7b6d925d7610a5
   }
  
 }
