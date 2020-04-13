@@ -56,7 +56,6 @@ class DatabaseService {
 
   Future<bool> getUserType(String uid) async {
     bool isTutor = false;
-
     try 
     {
     await Firestore.instance.
@@ -67,13 +66,12 @@ class DatabaseService {
             if (doc.exists)
                 isTutor = true;
     });
-
-    return isTutor;
     }
     catch(e)
     {
       print(e.toString());
     }
+    return isTutor;
   }
 
   

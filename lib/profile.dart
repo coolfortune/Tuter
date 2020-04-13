@@ -8,7 +8,10 @@ import 'package:image_picker/image_picker.dart';
 
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({Key key}) : super(key: key);
+
+  final bool isTutor = false;
+
+  const ProfilePage({Key key, bool isTutor}) : super(key: key);
   @override
 
   _ProfilePage createState() => _ProfilePage();
@@ -63,7 +66,11 @@ class _ProfilePage extends State<ProfilePage> {
     //initState();
     return Scaffold(
       appBar: AppBar(
-        title: Text('Profile'),
+        title: Text((){
+            if (widget.isTutor)
+              return 'Profile: Tutor';
+            else return 'Profile: Tutor';
+        }()),
         actions: <Widget>[
 
           FlatButton.icon(

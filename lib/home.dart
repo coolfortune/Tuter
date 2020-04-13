@@ -1,11 +1,18 @@
 import 'package:Tuter/profile.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:Tuter/appointment-page.dart';
 import 'package:Tuter/home-page.dart';
 
+
 class NavBar extends StatefulWidget {
+
+  final bool isTutor;
+
   @override
   _NavBar createState() => new _NavBar();
+
+  NavBar({this.isTutor});
 }
 
 class _NavBar extends State<NavBar> with SingleTickerProviderStateMixin {
@@ -26,6 +33,7 @@ class _NavBar extends State<NavBar> with SingleTickerProviderStateMixin {
     ),
     ProfilePage(
       key: PageStorageKey('Profile Page'),
+      isTutor: false,
     ),
   ];
 
