@@ -43,8 +43,8 @@ class MyApp extends StatelessWidget {
         title: 'Tüter',
         theme: ThemeData(
             primaryColor: Color(0xFFFFDD28),
-            accentColor: Colors.amber,
-            indicatorColor: Colors.amberAccent
+            accentColor: Colors.amberAccent,
+            indicatorColor: Colors.amber,
             ),
         home: Wrapper(),
       )

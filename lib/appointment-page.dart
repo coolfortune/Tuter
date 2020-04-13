@@ -123,21 +123,9 @@ class _AppointmentPage extends State<AppointmentPage> {
   Widget _buildListItem(BuildContext context, DocumentSnapshot snapshot) {
     final record = Appointment.fromSnapshot(snapshot);
 
-    final int startHour = record.startTime.toDate().hour;
-    final int startMinute = record.startTime.toDate().minute;
-    final String startTime =
-        (startHour > 9 ? startHour.toString() : '0' + startHour.toString()) +
-            ':' +
-            (startMinute > 9
-                ? startMinute.toString()
-                : '0' + startMinute.toString());
+    final String startTime = record.startTime.toDate().toString().substring(10, 16);
 
-    final int endHour = record.endTime.toDate().hour;
-    final int endMinute = record.endTime.toDate().minute;
-    final String endTime =
-        (endHour > 9 ? endHour.toString() : '0' + endHour.toString()) +
-            ':' +
-            (endMinute > 9 ? endMinute.toString() : '0' + endMinute.toString());
+    final String endTime = record.endTime.toDate().toString().substring(10, 16);
 
     final String weekdayName = weekday[record.startTime.toDate().weekday];
 

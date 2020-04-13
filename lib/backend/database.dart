@@ -32,6 +32,9 @@ class DatabaseService {
       'className': record.className,
       'startTime': record.startTime,
       'endTime': record.endTime,
+      'time': record.time,
+      'date': record.date,
+      'tutorName': record.tutorName,
     }, merge: true);
   }
 

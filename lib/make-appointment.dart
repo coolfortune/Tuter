@@ -19,6 +19,17 @@ class _MakeAppointmentState extends State<MakeAppointment> {
     'COP3502',
     'COP3503'
   ];
+
+  final List<String> weekday = [
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+    'Sunday'
+  ];
+
   int _selectedIndex = 0;
 
   DateTime date = DateTime(2020, DateTime.now().month, DateTime.now().day + 1);
@@ -88,7 +99,9 @@ class _MakeAppointmentState extends State<MakeAppointment> {
                                   .map((code) => ListTile(
                                         leading:
                                             (code == classCodes[_selectedIndex])
-                                                ? Icon(Icons.check)
+                                                ? Icon(Icons.check,
+                                                  color: Colors.amber,
+                                                )
                                                 : SizedBox(),
                                         title: Text(code),
                                         onTap: () {
@@ -234,9 +247,10 @@ class _MakeAppointmentState extends State<MakeAppointment> {
 
   void _makeAppointmentPopup() {
     final String dateString =
-        date.toString().replaceAll(r"-", r"/").split(r" ")[0];
+        date.toString().replaceAll(r"-", r"/").split(r" ")[0].substring(5);
     final String startTimeString = startTime.toString().substring(10, 15);
     final String endTimeString = endTime.toString().substring(10, 15);
+    final String weekdayStr = weekday[date.weekday];
 
     showDialog(
         context: context,
@@ -244,7 +258,7 @@ class _MakeAppointmentState extends State<MakeAppointment> {
           return AlertDialog(
             title: Text('Create Appointment?'),
             content: Text(
-                'Create Appointment with ${user.email} on\n$dateString from $startTimeString to $endTimeString?'),
+                'Create Appointment with ${user.email} on\n$weekdayStr, $dateString from $startTimeString to $endTimeString?'),
             actions: <Widget>[
               FlatButton(
                   textColor: Colors.amber,
@@ -267,7 +281,7 @@ class _MakeAppointmentState extends State<MakeAppointment> {
       lastDate: DateTime(2030),
       builder: (BuildContext context, Widget child) {
         return Theme(
-          data: ThemeData.light(),
+          data: Theme.of(context),
           child: child,
           isMaterialAppTheme: true,
         );
@@ -287,7 +301,7 @@ class _MakeAppointmentState extends State<MakeAppointment> {
       initialTime: time,
       builder: (BuildContext context, Widget child) {
         return Theme(
-          data: ThemeData.light(),
+          data: Theme.of(context),
           child: child,
           isMaterialAppTheme: true,
         );
@@ -302,15 +316,21 @@ class _MakeAppointmentState extends State<MakeAppointment> {
   }
 
   _makeAppointment() async {
+    String tutorName = await Firestore.instance.collection('Tutors').document(uid).get().then((snap) => snap.exists ? snap.data['tutorName'] : "");
     DateTime dateStart =
         date.add(Duration(hours: startTime.hour, minutes: startTime.minute));
     DateTime dateEnd =
         date.add(Duration(hours: endTime.hour, minutes: endTime.minute));
+    String timeStr = dateStart.toString().substring(10, 16) + ' - ' + dateEnd.toString().substring(10, 16);
+    String weekdayStr = weekday[date.weekday];
 
     Appointment record = Appointment(
       className: classCodes[_selectedIndex],
       startTime: Timestamp.fromDate(dateStart),
       endTime: Timestamp.fromDate(dateEnd),
+      time: timeStr,
+      date: weekdayStr,
+      tutorName: tutorName,
     );
 
     DatabaseService(uid: uid)

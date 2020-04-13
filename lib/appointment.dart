@@ -28,7 +28,6 @@ class Appointment {
         //assert(map['time'] != null),
         assert(map['startTime'] != null),
         assert(map['endTime'] != null),
-        //assert(map['tuterName'] != null),
         className = map['className'],
         time = map['time'],
         date = map['date'],

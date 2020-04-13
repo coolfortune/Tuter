@@ -4,7 +4,6 @@ import 'package:Tuter/appointment.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:Tuter/backend/auth.dart';
-import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key key}) : super(key: key);
@@ -47,7 +46,7 @@ class _HomePage extends State<HomePage> {
 
   Widget _buildBody(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-        stream: Firestore.instance.collection('Appointments').snapshots(),
+        stream: Firestore.instance.collection('Appointments').orderBy('startTime').snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasError)
             return Text(
