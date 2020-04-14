@@ -33,9 +33,11 @@ class _NavBar extends State<NavBar> with SingleTickerProviderStateMixin {
   final List<Widget> _childrenStudent = [
     HomePage(
       key: PageStorageKey('Home Page'),
+      isTutor: false,
     ),
     AppointmentPage(
       key: PageStorageKey('Appointment Page'),
+      isTutor: false,
     ),
     ProfilePage(
       key: PageStorageKey('Profile Page'),
@@ -46,9 +48,11 @@ class _NavBar extends State<NavBar> with SingleTickerProviderStateMixin {
   final List<Widget> _childrenTutor = [
     HomePage(
       key: PageStorageKey('Home Page'),
+      isTutor: true,
     ),
     AppointmentPage(
       key: PageStorageKey('Appointment Page'),
+      isTutor: true,
     ),
     ProfilePage(
       key: PageStorageKey('Profile Page'),
