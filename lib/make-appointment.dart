@@ -353,26 +353,4 @@ class _MakeAppointmentState extends State<MakeAppointment> {
         )));
   }
 
-  void _confirmSignout() {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Are you sure you want to log out?'),
-            actions: <Widget>[
-              FlatButton(
-                  textColor: Colors.amber,
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    _auth.logOut();
-                  },
-                  child: Text('Yes')),
-              FlatButton(
-                  textColor: Colors.amber,
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: Text('No')),
-            ],
-          );
-        });
-  }
 }
