@@ -159,14 +159,24 @@ class _ProfilePage extends State<ProfilePage> {
         _uploadedFileURL = imageURL;
       });
     });
+
+    Navigator.of(context).pop();
+    Scaffold.of(context).showSnackBar(SnackBar(
+        backgroundColor: Colors.grey[200],
+        behavior: SnackBarBehavior.floating,
+        content: Text(
+          'Transcript uploaded successfully!',
+          style: TextStyle(
+            color: Colors.black,
+          ),
+        )));
   }
 
   void selected(String selection) {
     print('congrats no selecting');
     if (selection == 'Upload Transcripts') chooseFile();
 
-    if (selection == 'Confirm Upload') {
-      uploadImage();
+    if (selection == 'Clear') {
       setState(() {
         _image = null;
       });
@@ -207,53 +217,90 @@ class _ProfilePage extends State<ProfilePage> {
   Widget build(BuildContext context) {
     //initState();
     return Scaffold(
-        appBar: AppBar(
-          title: Text(() {
-            if (widget.isTutor)
-              return 'Profile: Tutor';
-            else
-              return 'Profile: Student';
-          }()),
-          actions: <Widget>[
-            FlatButton.icon(
-              icon: Icon(Icons.person),
-              label: Text('Log Out'),
-              onPressed: _confirmSignout,
-            ),
-            PopupMenuButton<String>(
-                onSelected: selected,
-                itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                      const PopupMenuItem<String>(
-                        value: 'Upload Transcripts',
-                        child: Text("Upload Transcripts"),
-                      ),
-                      const PopupMenuItem<String>(
-                        child: Text("Edit Profile"),
-                      ),
-                      const PopupMenuItem<String>(
-                        child: Text("Make a Report"),
-                      ),
-                      _image == null ? null : PopupMenuDivider(height: 15),
-                      _image == null
-                          ? null
-                          : const PopupMenuItem<String>(
-                              value: 'Confirm Upload',
-                              child: Text('Confirm Upload'),
-                            )
-                    ]),
-          ],
-        ),
-        body: loading
-            ? LinearProgressIndicator()
-            : Center(
-                child: SingleChildScrollView(
-                    child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  profileAvatar(context),
-                  profileName(context),
-                  majorProfile(context),
-                ],
-              ))));
+      appBar: AppBar(
+        title: Text(() {
+          if (widget.isTutor)
+            return 'Profile: Tutor';
+          else
+            return 'Profile: Student';
+        }()),
+        actions: <Widget>[
+          FlatButton.icon(
+            icon: Icon(Icons.exit_to_app),
+            label: Text('Log Out'),
+            onPressed: _confirmSignout,
+          ),
+          PopupMenuButton<String>(
+              onSelected: selected,
+              itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                    const PopupMenuItem<String>(
+                      value: 'Upload Transcripts',
+                      child: Text("Upload Transcripts"),
+                    ),
+                    const PopupMenuItem<String>(
+                      child: Text("Edit Profile"),
+                    ),
+                    const PopupMenuItem<String>(
+                      child: Text("Make a Report"),
+                    ),
+                    _image == null ? null : PopupMenuDivider(height: 15),
+                    _image == null
+                        ? null
+                        : const PopupMenuItem<String>(
+                            value: 'Clear',
+                            child: Text('Clear'),
+                          )
+                  ]),
+        ],
+      ),
+      body: loading
+          ? LinearProgressIndicator()
+          : Center(
+              child: SingleChildScrollView(
+                  child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                profileAvatar(context),
+                profileName(context),
+                majorProfile(context),
+              ],
+            ))),
+      floatingActionButton: uploadDialog(),
+    );
+  }
+
+  uploadDialog() {
+    if (_image != null) {
+      return FloatingActionButton(
+        backgroundColor: Theme.of(context).primaryColor,
+        onPressed: confirmUpload,
+        child: Icon(Icons.file_upload),
+      );
+    } else {
+      return null;
+    }
+  }
+
+  void confirmUpload() {
+    assert(_image != null);
+
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Confirm Upload'),
+            content: Image.file(_image),
+            actions: <Widget>[
+              FlatButton(
+                  textColor: Colors.amber,
+                  onPressed: uploadImage,
+                  child: Text('Yes')),
+              FlatButton(
+                  textColor: Colors.amber,
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text('No')),
+            ],
+          );
+        });
   }
 }
