@@ -3,11 +3,14 @@ import 'package:Tuter/login-buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import 'logIn.dart';
+
 class ForgotPage extends StatefulWidget {
   ForgotPage({Key key}) : super(key: key);
   @override
   _ForgotPage createState() => new _ForgotPage();
 }
+
 
 class _ForgotPage extends State<ForgotPage> {
   final _formKey = GlobalKey<FormState>();
@@ -36,17 +39,6 @@ class _ForgotPage extends State<ForgotPage> {
     }
   }
 
-  String validateEmail(input) {
-    Pattern pattern =
-        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-    RegExp regex = RegExp(pattern);
-
-    if (regex.hasMatch(input)) {
-      return null;
-    } else {
-      return 'Please enter a valid email address';
-    }
-  }
 
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,7 +57,7 @@ class _ForgotPage extends State<ForgotPage> {
                   children: <Widget>[
                     CustomTextField(
                       hint: 'Please enter your Email Address',
-                      validator: validateEmail,
+                      validator: Validators.validateEmail,
                       onSaved: (value) => _email = value.trim().toLowerCase(),
                     ),
                     SizedBox(height: 50.0),
