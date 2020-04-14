@@ -1,6 +1,9 @@
 import 'package:Tuter/loading.dart';
+import 'package:Tuter/logIn.dart';
 import 'package:flutter/material.dart';
 import 'package:Tuter/backend/auth.dart';
+
+import 'logIn.dart';
 
 class SignupPage extends StatefulWidget {
   SignupPage({Key key}) : super(key: key);
@@ -14,6 +17,7 @@ class _SignupPage extends State<SignupPage> {
   final formKey = new GlobalKey<FormState>();
   final Auth _auth = Auth();
   bool loading = false;
+  bool pressed = false;
 
   String _email;
   String _password;
@@ -22,6 +26,19 @@ class _SignupPage extends State<SignupPage> {
   String _major;
 
   StudentType _type = StudentType.student;
+
+  void emailVerification(BuildContext context) async {
+    final form = formKey.currentState;
+    if (form.validate()) {
+      try {
+        Scaffold.of(context).showSnackBar(SnackBar(
+          content: Text('Verification email has been sent')));
+      } catch (e) {
+          print(e);
+      }
+    } else
+      print('Form is invalid');
+  }
 
   // function to register during sign up on click of confirm
   void saveUserInformation() async {
@@ -44,7 +61,7 @@ class _SignupPage extends State<SignupPage> {
           {
             print('registration failed');
           });
-        }
+        } 
       }
       // check for Tutor, create user and Tutor collection
       else if (_type == StudentType.tutor)
@@ -81,35 +98,30 @@ class _SignupPage extends State<SignupPage> {
                 child: new Column(children: <Widget>[
                   new TextFormField(
                     decoration: new InputDecoration(labelText: 'First Name'),
-                    validator: (value) =>
-                        value.isEmpty ? 'Please provide your first name' : null,
+                    validator: (input) => Validators.generic(input, 'Please enter your first name'),
                     onSaved: (value) => _firstName = value,
                     textCapitalization: TextCapitalization.words,
                   ),
                   new TextFormField(
                     decoration: new InputDecoration(labelText: 'Last Name'),
-                    validator: (value) =>
-                        value.isEmpty ? 'Please provide your last name' : null,
+                    validator: (input) => Validators.generic(input, 'Please enter your last name'),
                     onSaved: (value) => _lastName = value,
                     textCapitalization: TextCapitalization.words,
                   ),
                   new TextFormField(
                     decoration: new InputDecoration(labelText: 'Major'),
-                    validator: (value) =>
-                        value.isEmpty ? 'Please provide your major' : null,
+                    validator: (input) => Validators.generic(input, 'Please enter your major'),
                     onSaved: (value) => _major = value,
                     textCapitalization: TextCapitalization.words,
                   ),
                   new TextFormField(
                     decoration: new InputDecoration(labelText: 'Email'),
-                    validator: (value) =>
-                        value.isEmpty ? 'Please provide your email' : null,
+                    validator: Validators.validateEmail,
                     onSaved: (value) => _email = value,
                   ),
                   new TextFormField(
                     decoration: new InputDecoration(labelText: 'Password'),
-                    validator: (value) =>
-                        value.isEmpty ? 'Please provide a password' : null,
+                    validator: Validators.password,
                     obscureText: true,
                     onSaved: (value) => _password = value,
                   ),
@@ -173,11 +185,16 @@ class _SignupPage extends State<SignupPage> {
                       ),
                     ),
                     shape: const StadiumBorder(),
-                    onPressed: saveUserInformation,
+                    onPressed: () {
+                      saveUserInformation();
+                      //Navigator.pop(context, LogIn());
+                    }
                   ),
-                  //LoginButton(text: 'Confirm'),
-                ])),
+                ]
+              )
+            ),
           ),
-        ));
+        )
+      );
   }
 }
