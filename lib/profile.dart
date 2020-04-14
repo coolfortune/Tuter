@@ -24,11 +24,17 @@ class _ProfilePage extends State<ProfilePage> {
   String _uploadedFileURL;
 
   Future chooseFile() async{
-    await ImagePicker.pickImage(source: ImageSource.gallery).then((image){
-        setState(() {
-          _image = image;
-        });
-    });
+    try{
+      await ImagePicker.pickImage(source: ImageSource.gallery).then((image){
+          setState(() {
+            _image = image;
+          });
+      });
+    } catch(e)
+    {
+      print('Error in image picker');
+    }
+
   }
 
   Future uploadImage() async{
