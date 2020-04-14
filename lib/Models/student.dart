@@ -5,8 +5,8 @@ class Student {
   String email;
   String major;
   List<String> schedule;
-  int positiveRatings = 0;
-  int totalRatings = 0;
+  int positiveRatings = 1;
+  int totalRatings = 1;
 
   Student({ this.firstName, this.lastName, this.email, this.major, this.schedule});
   Student.fromProfile(String email, String firstName, String lastName, String major, int positiveRatings, int totalRatings)
