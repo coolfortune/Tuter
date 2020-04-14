@@ -64,6 +64,7 @@ enum Direction { left, right }
 class _LogInState extends State<LogIn> {
   final _formKey = GlobalKey<FormState>();
 
+
   final Auth _auth = Auth();
   String _email, _password;
   bool loading = false;
