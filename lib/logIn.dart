@@ -40,6 +40,7 @@ enum Direction { left, right }
 // where the log in page starts
 class _LogInState extends State<LogIn> {final _formKey = GlobalKey<FormState>();
 
+
   final Auth _auth = Auth();
   String _email, _password;
   bool loading = false;
@@ -94,12 +95,17 @@ class _LogInState extends State<LogIn> {final _formKey = GlobalKey<FormState>();
                       setState(() => loading = true);
                       form.save();
                       dynamic result = await _auth.logIn(_email, _password);
+                      print(result);
                       if(result == null){
                         setState(() {
                           print('Email or password is incorrect');
                           loading = false;
                         });
-
+                       }
+                      if (result == _auth.logOut()) {
+                        setState(() {
+                          print('User is not verified');
+                        });
                       }
                     }
                 }

@@ -16,18 +16,33 @@ class Auth {
     return user != null ? User(uid: user.uid) : null;
   }
 
+  Future emailVerification(FirebaseUser user) async {
+    try {
+      await user.sendEmailVerification();
+      return _userFromFirebaseUser(user);
+    } catch (e) {
+      return e;
+    }
+  } 
+
   // log in
 
-  Future logIn(String email, String password) async{
-    try{
+  Future logIn(String email, String password) async {
       AuthResult result = await _auth.signInWithEmailAndPassword(email: email, password: password);
       FirebaseUser user = result.user;
-      return user;
-    }
-    catch(e){
-      print(e.toString());
-      return null;
-    }
+      print('IN THE LOG IN');
+      user.reload();
+      result = await _auth.signInWithEmailAndPassword(email: email, password: password);
+      user = result.user;
+  
+      if (user.isEmailVerified) {
+        print('USER IS VERIFIED');
+        return user;
+      }
+      else {
+        print('USER IS NOT VERIFIED');
+        return logOut();
+      }
 
   }
 
@@ -51,11 +66,12 @@ class Auth {
       FirebaseUser user = result.user;
       // create a new Student for the user with the uid
       await DatabaseService(uid: user.uid).updateStudentData(email, firstName, lastName, major);
-      return _userFromFirebaseUser(user);
+      return emailVerification(user);
     } catch (error) {
       print(error.toString());
       return null;
-    } 
+    }
+
   }
 
   Future registerTutor(String email, String password, String firstName, String lastName, String major) async {
@@ -64,7 +80,7 @@ class Auth {
       FirebaseUser user = result.user;
       // create a new Tutor for the user with the uid
       await DatabaseService(uid: user.uid).updateTutorData(email, firstName, lastName, major);
-      return _userFromFirebaseUser(user);
+      return  emailVerification(user);
     } catch (error) {
       print(error.toString());
       return null;
