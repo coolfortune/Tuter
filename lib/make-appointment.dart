@@ -34,7 +34,7 @@ class _MakeAppointmentState extends State<MakeAppointment> {
 
   DateTime date = DateTime(2020, DateTime.now().month, DateTime.now().day + 1);
   TimeOfDay startTime = TimeOfDay.now();
-  TimeOfDay endTime = TimeOfDay.now();
+  TimeOfDay endTime = TimeOfDay.fromDateTime(DateTime.now().add(Duration(minutes: 30)));
 
   FirebaseUser user;
   String uid;
@@ -247,7 +247,7 @@ class _MakeAppointmentState extends State<MakeAppointment> {
 
   void _makeAppointmentPopup() {
     final String dateString =
-        date.toString().replaceAll(r"-", r"/").split(r" ")[0].substring(5);
+        date.toString().replaceAll(r"-", r"/").split(" ")[0].substring(5);
     final String startTimeString = startTime.toString().substring(10, 15);
     final String endTimeString = endTime.toString().substring(10, 15);
     final String weekdayStr = weekday[date.weekday];
@@ -258,7 +258,7 @@ class _MakeAppointmentState extends State<MakeAppointment> {
           return AlertDialog(
             title: Text('Create Appointment?'),
             content: Text(
-                'Create Appointment with ${user.email} on\n$weekdayStr, $dateString from $startTimeString to $endTimeString?'),
+                'Create appointment on $weekdayStr, $dateString from $startTimeString to $endTimeString?'),
             actions: <Widget>[
               FlatButton(
                   textColor: Colors.amber,
@@ -316,7 +316,8 @@ class _MakeAppointmentState extends State<MakeAppointment> {
   }
 
   _makeAppointment() async {
-    String tutorName = await Firestore.instance.collection('Tutors').document(uid).get().then((snap) => snap.exists ? snap.data['tutorName'] : "");
+    String firstName = await Firestore.instance.collection('Tutors').document(uid).get().then((snap) => snap.exists ? (snap.data['firstName'] ?? "") : "");
+    String lastName = await Firestore.instance.collection('Tutors').document(uid).get().then((snap) => snap.exists ? (snap.data['lastName'] ?? "") : "");
     DateTime dateStart =
         date.add(Duration(hours: startTime.hour, minutes: startTime.minute));
     DateTime dateEnd =
@@ -330,7 +331,7 @@ class _MakeAppointmentState extends State<MakeAppointment> {
       endTime: Timestamp.fromDate(dateEnd),
       time: timeStr,
       date: weekdayStr,
-      tutorName: tutorName,
+      tutorName: '$firstName $lastName',
     );
 
     DatabaseService(uid: uid)
