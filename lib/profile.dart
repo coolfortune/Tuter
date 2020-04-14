@@ -151,7 +151,7 @@ class _ProfilePage extends State<ProfilePage> {
 
   @override  
   Widget build(BuildContext context) {
-    return loading ? Loading() : Scaffold(
+    return Scaffold(
       appBar: AppBar(
         title: Text((){
             if (widget.isTutor)
@@ -192,7 +192,7 @@ class _ProfilePage extends State<ProfilePage> {
           ),
         ],
       ),
-      body: Center(
+      body: loading ? LinearProgressIndicator() : Center(
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
