@@ -17,11 +17,17 @@ class Wrapper extends StatelessWidget {
       userType = db.getUserType(user.uid);
     else userType = null;
 
+    // decide to either go to log in or home page
+    // if (user == null || !user.isEmailVerified)
+    //   return LogIn();
+    // else 
+    //   return NavBar();
+
     return FutureBuilder(
       future:userType,
       builder: (BuildContext context, AsyncSnapshot snapshot){
 
-        if(snapshot.connectionState == ConnectionState.done)
+        if(snapshot.connectionState == ConnectionState.done && user.isEmailVerified)
             return NavBar(isTutor: snapshot.data);
         else return LogIn();
       }

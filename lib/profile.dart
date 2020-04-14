@@ -223,7 +223,7 @@ class _ProfilePage extends State<ProfilePage> {
         }()),
         actions: <Widget>[
           FlatButton.icon(
-            icon: Icon(Icons.person),
+            icon: Icon(Icons.exit_to_app),
             label: Text('Log Out'),
             onPressed: _confirmSignout,
           ),
