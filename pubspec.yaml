@@ -19,7 +19,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-<<<<<<< HEAD
   firebase_auth: ^0.15.5+3      # used in authentication
   provider: ^4.0.4              # used for authentication changes
   cloud_firestore: ^0.13.4+2    # used to set data in database
@@ -28,14 +27,9 @@ dependencies:
   flutter_spinkit: "^4.1.2"
   barcode_scan: ^2.0.2
   qr_flutter: ^3.2.0
-
-
-=======
-  firebase_auth: ^0.15.5+3
-  provider: ^4.0.4
-  cloud_firestore: ^0.13.4+2
   flutter_datetime_picker: ^1.3.5
->>>>>>> 57485ae19a5713e4f7174ed3170a10249b23618a
+
+
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

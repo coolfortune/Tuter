@@ -5,15 +5,15 @@ import 'package:Tuter/appointment.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:Tuter/backend/auth.dart';
-<<<<<<< HEAD
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:Tuter/Models/user.dart';
 import 'package:flutter/services.dart';
-=======
->>>>>>> 57485ae19a5713e4f7174ed3170a10249b23618a
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key key}) : super(key: key);
+
+  final bool isTutor;
+
+  const HomePage({Key key, this.isTutor}) : super(key: key);
 
   @override
   _HomePage createState() => new _HomePage();
