@@ -60,6 +60,7 @@ class _SignupPage extends State<SignupPage> {
           setState(() 
           {
             print('registration failed');
+            loading = false;
           });
         } 
       }
@@ -75,6 +76,7 @@ class _SignupPage extends State<SignupPage> {
           setState(() 
           {
             print('registration failed');
+            loading = false;
           });
         }
       }

@@ -2,6 +2,8 @@ import 'dart:io';
 import 'package:Tuter/loading.dart';
 import 'package:path/path.dart' as Path;
 import 'package:Tuter/make-appointment.dart';
+import 'dart:io';
+import 'package:path/path.dart' as Path; 
 import 'package:flutter/material.dart';
 import 'package:Tuter/backend/auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -211,8 +213,9 @@ class _ProfilePage extends State<ProfilePage> {
     widget.isTutor ? getTutor() : getStudent();
   }
 
-  @override
+   @override  
   Widget build(BuildContext context) {
+    //initState();
     return Scaffold(
       appBar: AppBar(
         title: Text(() {
@@ -285,7 +288,7 @@ class _ProfilePage extends State<ProfilePage> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Confirm Upload'),
+            title: Text('Confirm Upload?'),
             content: Image.file(_image),
             actions: <Widget>[
               FlatButton(
