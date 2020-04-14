@@ -8,7 +8,10 @@ import 'package:image_picker/image_picker.dart';
 
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({Key key}) : super(key: key);
+
+  final bool isTutor;
+  const ProfilePage({Key key, this.isTutor}) : super(key: key);
+  
   @override
 
   _ProfilePage createState() => _ProfilePage();
@@ -21,11 +24,17 @@ class _ProfilePage extends State<ProfilePage> {
   String _uploadedFileURL;
 
   Future chooseFile() async{
-    await ImagePicker.pickImage(source: ImageSource.gallery).then((image){
-        setState(() {
-          _image = image;
-        });
-    });
+    try{
+      await ImagePicker.pickImage(source: ImageSource.gallery).then((image){
+          setState(() {
+            _image = image;
+          });
+      });
+    } catch(e)
+    {
+      print('Error in image picker');
+    }
+
   }
 
   Future uploadImage() async{
@@ -63,7 +72,11 @@ class _ProfilePage extends State<ProfilePage> {
     //initState();
     return Scaffold(
       appBar: AppBar(
-        title: Text('Profile'),
+        title: Text((){
+            if (widget.isTutor)
+              return 'Profile: Tutor';
+            else return 'Profile: Student';
+        }()),
         actions: <Widget>[
 
           FlatButton.icon(

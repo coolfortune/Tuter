@@ -19,10 +19,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  cloud_firestore: ^0.13.4+2
-  firebase_auth: ^0.15.5+3
+  firebase_auth: ^0.15.5+3      # used in authentication
+  provider: ^4.0.4              # used for authentication changes
+  cloud_firestore: ^0.13.4+2    # used to set data in database
   firebase_storage: ^3.1.5
-  provider: ^4.0.4
   image_picker: ^0.6.5
   flutter_spinkit: "^4.1.2"
   barcode_scan: ^2.0.2
