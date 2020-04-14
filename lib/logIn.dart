@@ -104,37 +104,6 @@ class _LogInState extends State<LogIn> {final _formKey = GlobalKey<FormState>();
                     }
                 }
               ),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 35.0, vertical: 8.0),
-                child: RawMaterialButton(               // log in with google button
-                  fillColor: Colors.lightBlue[800],
-                  elevation: 2.0,
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(vertical: 10.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Image(
-                          image: AssetImage('lib/images/googleLogo.png'),
-                          height: 25.0,
-                          width: 25.0,
-                        ),
-                        SizedBox(width: 15.0),
-                        Text(
-                          'Login with Google',
-                          maxLines: 1,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20.0,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  shape: StadiumBorder(),
-                  onPressed: () => null,
-                ),
-              ),
               FlatButton(           // forgot password button
                 onPressed: () =>
                     navigateToPage(context, Direction.left, ForgotPage()),
@@ -142,7 +111,7 @@ class _LogInState extends State<LogIn> {final _formKey = GlobalKey<FormState>();
                   'Forgot Password?',
                 ),
               ),
-              SizedBox(height: 50.0),
+              SizedBox(height: 20.0),
               Text(
                 'New to Tüter?',
                 style: TextStyle(
