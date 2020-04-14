@@ -1,4 +1,5 @@
 import 'package:Tuter/appointment.dart';
+import 'package:Tuter/backend/auth.dart';
 import 'package:Tuter/backend/database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -12,6 +13,7 @@ class MakeAppointment extends StatefulWidget {
 }
 
 class _MakeAppointmentState extends State<MakeAppointment> {
+  Auth _auth = Auth();
   final List<String> classCodes = [
     'COP3405',
     'COP4210',
@@ -349,5 +351,28 @@ class _MakeAppointmentState extends State<MakeAppointment> {
             color: Colors.black,
           ),
         )));
+  }
+
+  void _confirmSignout() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Are you sure you want to log out?'),
+            actions: <Widget>[
+              FlatButton(
+                  textColor: Colors.amber,
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    _auth.logOut();
+                  },
+                  child: Text('Yes')),
+              FlatButton(
+                  textColor: Colors.amber,
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text('No')),
+            ],
+          );
+        });
   }
 }
