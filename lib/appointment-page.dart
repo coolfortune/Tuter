@@ -2,12 +2,15 @@ import 'package:Tuter/backend/auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
 import 'appointment.dart';
+import 'make-appointment.dart';
 import 'backend/database.dart';
 
 class AppointmentPage extends StatefulWidget {
-  const AppointmentPage({Key key}) : super(key: key);
+
+  final bool isTutor;
+
+  const AppointmentPage({Key key,this.isTutor}) : super(key: key);
   @override
   _AppointmentPage createState() => new _AppointmentPage();
 }
@@ -123,7 +126,8 @@ class _AppointmentPage extends State<AppointmentPage> {
   Widget _buildListItem(BuildContext context, DocumentSnapshot snapshot) {
     final record = Appointment.fromSnapshot(snapshot);
 
-    final String startTime = record.startTime.toDate().toString().substring(10, 16);
+    final String startTime =
+        record.startTime.toDate().toString().substring(10, 16);
 
     final String endTime = record.endTime.toDate().toString().substring(10, 16);
 
@@ -216,13 +220,34 @@ class _AppointmentPage extends State<AppointmentPage> {
           FlatButton.icon(
             icon: Icon(Icons.person),
             label: Text('Log Out'),
-            onPressed: () async {
-              await _auth.logOut();
-            },
+            onPressed: _confirmSignout,
           )
         ],
-      ),
-      body: _buildBody(context),
+      ),   
+      body: widget.isTutor ? MakeAppointment() : _buildBody(context),
     );
+  }
+
+  void _confirmSignout() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Are you sure you want to log out?'),
+            actions: <Widget>[
+              FlatButton(
+                  textColor: Colors.amber,
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    _auth.logOut();
+                  },
+                  child: Text('Yes')),
+              FlatButton(
+                  textColor: Colors.amber,
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text('No')),
+            ],
+          );
+        });
   }
 }

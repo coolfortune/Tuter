@@ -10,7 +10,10 @@ import 'package:Tuter/Models/user.dart';
 import 'package:flutter/services.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key key}) : super(key: key);
+
+  final bool isTutor;
+
+  const HomePage({Key key, this.isTutor}) : super(key: key);
 
   @override
   _HomePage createState() => new _HomePage();
@@ -33,6 +36,7 @@ class _HomePage extends State<HomePage> {
     'Sunday'
   ];
 
+
   @override
   void initState() {
     super.initState();
@@ -51,7 +55,7 @@ class _HomePage extends State<HomePage> {
 
   Widget _buildBody(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-        stream: Firestore.instance.collection('Appointments').orderBy('startTime').snapshots(),
+        stream: Firestore.instance.collection('Appointments').snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasError)
             return Text(
@@ -76,26 +80,8 @@ class _HomePage extends State<HomePage> {
             .toList());
   }
 
-  Widget _buildListItem(BuildContext context, DocumentSnapshot snapshot) {
-    final record = Appointment.fromSnapshot(snapshot);
-
-    final int startHour = record.startTime.toDate().hour;
-    final int startMinute = record.startTime.toDate().minute;
-    final String startTime =
-        (startHour > 9 ? startHour.toString() : '0' + startHour.toString()) +
-            ':' +
-            (startMinute > 9
-                ? startMinute.toString()
-                : '0' + startMinute.toString());
-
-    final int endHour = record.endTime.toDate().hour;
-    final int endMinute = record.endTime.toDate().minute;
-    final String endTime =
-        (endHour > 9 ? endHour.toString() : '0' + endHour.toString()) +
-            ':' +
-            (endMinute > 9 ? endMinute.toString() : '0' + endMinute.toString());
-
-    final String weekdayName = weekday[record.startTime.toDate().weekday];
+  Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
+    final record = Appointment.fromSnapshot(data);
 
     return PopupMenuButton(
       itemBuilder: (context) => [
@@ -112,7 +98,7 @@ class _HomePage extends State<HomePage> {
               return AlertDialog(
                 title: Text('Confirm Appointment?'),
                 content: Text(
-                    '${record.className} with ${record.tutorName} on\n$weekdayName at $startTime - $endTime?'),
+                    '${record.className} with ${record.tutorName} on\n${record.date} at ${record.time}?'),
                 actions: <Widget>[
                   FlatButton(
                       textColor: Colors.amber,
@@ -131,19 +117,20 @@ class _HomePage extends State<HomePage> {
         padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
         child: Container(
           decoration: BoxDecoration(
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey,
-                offset: Offset(3.0, 3.0),
-                blurRadius: 3.0,
-              )
-            ],
+            boxShadow: [BoxShadow(
+              color: Colors.grey,
+              offset: Offset(3.0, 3.0),
+              blurRadius: 3.0,
+            )],
             gradient: LinearGradient(colors: [Colors.white, Colors.grey[300]]),
-            border: Border.all(color: Colors.grey, style: BorderStyle.none),
+            border: Border.all(
+              color: Colors.grey,
+              style: BorderStyle.none
+              ),
             borderRadius: BorderRadius.circular(5.0),
           ),
           child: ListTile(
-            title: Text(startTime + ' - ' + endTime),
+            title: Text(record.time),
             leading: Text(
               record.className,
               style: TextStyle(
@@ -152,7 +139,7 @@ class _HomePage extends State<HomePage> {
             ),
             trailing: Text(record.tutorName),
             isThreeLine: true,
-            subtitle: Text(weekdayName),
+            subtitle: Text(record.date),
             onTap: null,
           ),
         ),
@@ -180,7 +167,6 @@ class _HomePage extends State<HomePage> {
           ),
         )));
   }
-
 
   // Filtering function for the list builder
   bool _filterList(snapshot) {
@@ -227,7 +213,6 @@ class _HomePage extends State<HomePage> {
     setState(() => _searching = !_searching);
   }
 
-
   // Function which automatically shows or hides the floating button
   // based on the tab the user is on
 
@@ -271,9 +256,7 @@ class _HomePage extends State<HomePage> {
           FlatButton.icon(
             icon: Icon(Icons.person),
             label: Text('Log Out'),
-            onPressed: () async {
-              await _auth.logOut();
-            },
+            onPressed: _confirmSignout,
           ),
           PopupMenuButton<int>(
             icon: Icon(Icons.filter_center_focus),
@@ -299,5 +282,28 @@ class _HomePage extends State<HomePage> {
         onPressed: _searchAppointment,
       ),
     );
+  }
+
+  void _confirmSignout() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Are you sure you want to log out?'),
+            actions: <Widget>[
+              FlatButton(
+                  textColor: Colors.amber,
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    _auth.logOut();
+                  },
+                  child: Text('Yes')),
+              FlatButton(
+                  textColor: Colors.amber,
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text('No')),
+            ],
+          );
+        });
   }
 }

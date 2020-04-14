@@ -2,6 +2,8 @@ import 'package:Tuter/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:Tuter/backend/auth.dart';
 
+import 'logIn.dart';
+
 class SignupPage extends StatefulWidget {
   SignupPage({Key key}) : super(key: key);
   @override
@@ -37,6 +39,7 @@ class _SignupPage extends State<SignupPage> {
         setState(() => loading = true);
         print('registering student');
         dynamic result = await _auth.registerStudent(_email.trim(), _password, _firstName, _lastName, _major);
+        setState(() => loading = false);
         if (result == null)
         {
           setState(() 
@@ -52,6 +55,7 @@ class _SignupPage extends State<SignupPage> {
         setState(() => loading = true);
         print('registering tutor');
         dynamic result = await _auth.registerTutor(_email.trim(), _password, _firstName, _lastName, _major);
+        setState(() => loading = false);
         if (result == null)
         {
           setState(() 
@@ -81,35 +85,30 @@ class _SignupPage extends State<SignupPage> {
                 child: new Column(children: <Widget>[
                   new TextFormField(
                     decoration: new InputDecoration(labelText: 'First Name'),
-                    validator: (value) =>
-                        value.isEmpty ? 'Please provide your first name' : null,
+                    validator: (input) => Validators.generic(input, 'Please enter your first name'),
                     onSaved: (value) => _firstName = value,
                     textCapitalization: TextCapitalization.words,
                   ),
                   new TextFormField(
                     decoration: new InputDecoration(labelText: 'Last Name'),
-                    validator: (value) =>
-                        value.isEmpty ? 'Please provide your last name' : null,
+                    validator: (input) => Validators.generic(input, 'Please enter your last name'),
                     onSaved: (value) => _lastName = value,
                     textCapitalization: TextCapitalization.words,
                   ),
                   new TextFormField(
                     decoration: new InputDecoration(labelText: 'Major'),
-                    validator: (value) =>
-                        value.isEmpty ? 'Please provide your major' : null,
+                    validator: (input) => Validators.generic(input, 'Please enter your major'),
                     onSaved: (value) => _major = value,
                     textCapitalization: TextCapitalization.words,
                   ),
                   new TextFormField(
                     decoration: new InputDecoration(labelText: 'Email'),
-                    validator: (value) =>
-                        value.isEmpty ? 'Please provide your email' : null,
+                    validator: Validators.validateEmail,
                     onSaved: (value) => _email = value,
                   ),
                   new TextFormField(
                     decoration: new InputDecoration(labelText: 'Password'),
-                    validator: (value) =>
-                        value.isEmpty ? 'Please provide a password' : null,
+                    validator: Validators.password,
                     obscureText: true,
                     onSaved: (value) => _password = value,
                   ),

@@ -1,13 +1,22 @@
 class Student {
 
-  final String firstName;
-  final String lastName;
-  final String email;
-  final String major;
-  final List<String> schedule;
-  int positiveRatings = 0;
-  int totalRatings = 0;
+  String firstName;
+  String lastName;
+  String email;
+  String major;
+  List<String> schedule;
+  int positiveRatings = 1;
+  int totalRatings = 1;
 
   Student({ this.firstName, this.lastName, this.email, this.major, this.schedule});
+  Student.fromProfile(String email, String firstName, String lastName, String major, int positiveRatings, int totalRatings)
+  {
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.email = email;
+    this.major = major;
+    this.positiveRatings = positiveRatings;
+    this.totalRatings = totalRatings;
+  }
 
 }
