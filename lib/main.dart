@@ -42,7 +42,10 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Tüter',
         theme: ThemeData(
-            primaryColor: Color(0xFFFFDD28)),
+            primaryColor: Color(0xFFFFDD28),
+            accentColor: Colors.amberAccent,
+            indicatorColor: Colors.amber,
+            ),
         home: Wrapper(),
       )
     );

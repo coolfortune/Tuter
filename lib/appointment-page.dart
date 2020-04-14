@@ -2,18 +2,31 @@ import 'package:Tuter/backend/auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
 import 'appointment.dart';
+import 'make-appointment.dart';
 import 'backend/database.dart';
 
 class AppointmentPage extends StatefulWidget {
-  const AppointmentPage({Key key}) : super(key: key);
+
+  final bool isTutor;
+
+  const AppointmentPage({Key key,this.isTutor}) : super(key: key);
   @override
   _AppointmentPage createState() => new _AppointmentPage();
 }
 
 class _AppointmentPage extends State<AppointmentPage> {
   Auth _auth = Auth();
+
+  final List<String> weekday = [
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+    'Sunday'
+  ];
 
   String uid;
   FirebaseUser user;
@@ -29,7 +42,6 @@ class _AppointmentPage extends State<AppointmentPage> {
   }
 
   void _deleteAppointment(record) async {
-
     DatabaseService(uid: uid)
         .deleteAppointment(uid, record)
         .then((value) => print('Appointment deleted successfully'))
@@ -60,20 +72,23 @@ class _AppointmentPage extends State<AppointmentPage> {
             );
           else if (!snapshot.hasData) return LinearProgressIndicator();
 
-          final List<dynamic> refList = snapshot.data.data['appointments'] ?? [];
+          final List<dynamic> refList =
+              snapshot.data.data['appointments'] ?? [];
 
           return refList.isEmpty
               ? Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Center(child: Text('No Saved Appointments',
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 20.0,
-                    ),
-                  )),
-                ],
-              )
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Center(
+                        child: Text(
+                      'No Saved Appointments',
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 15.0,
+                      ),
+                    )),
+                  ],
+                )
               : ListView(
                   padding: EdgeInsets.only(top: 20.0),
                   children: refList
@@ -111,11 +126,21 @@ class _AppointmentPage extends State<AppointmentPage> {
   Widget _buildListItem(BuildContext context, DocumentSnapshot snapshot) {
     final record = Appointment.fromSnapshot(snapshot);
 
+    final String startTime = record.startTime.toDate().toString().substring(10, 16);
+
+    final String endTime = record.endTime.toDate().toString().substring(10, 16);
+
+    final String weekdayName = weekday[record.startTime.toDate().weekday];
+
     return PopupMenuButton(
       itemBuilder: (context) => [
         PopupMenuItem(
           value: 1,
           child: Text('Delete Appointment'),
+        ),
+        PopupMenuItem(
+          value: 2,
+          child: Text('See Contact Info'),
         ),
       ],
       offset: Offset(1.0, 0),
@@ -123,21 +148,33 @@ class _AppointmentPage extends State<AppointmentPage> {
         showDialog(
             context: context,
             builder: (BuildContext context) {
-              return AlertDialog(
-                title: Text('Confirm Deletion?'),
-                //content: Text(
-                //  '${record.className} with ${record.tutorName} on\n${record.date} at ${record.time}?'),
-                actions: <Widget>[
-                  FlatButton(
-                      textColor: Colors.amber,
-                      onPressed: () => _deleteAppointment(record),
-                      child: Text('Yes')),
-                  FlatButton(
+              if (value == 1) {
+                return AlertDialog(
+                  title: Text('Confirm Deletion?'),
+                  actions: <Widget>[
+                    FlatButton(
+                        textColor: Colors.amber,
+                        onPressed: () => _deleteAppointment(record),
+                        child: Text('Yes')),
+                    FlatButton(
+                        textColor: Colors.amber,
+                        onPressed: () => Navigator.of(context).pop(),
+                        child: Text('No')),
+                  ],
+                );
+              } else {
+                return AlertDialog(
+                  title: Text('Contact Information'),
+                  //content: Text(
+                  actions: <Widget>[
+                    FlatButton(
                       textColor: Colors.amber,
                       onPressed: () => Navigator.of(context).pop(),
-                      child: Text('No')),
-                ],
-              );
+                      child: Text('Close'),
+                    )
+                  ],
+                );
+              }
             });
       },
       child: Padding(
@@ -157,7 +194,7 @@ class _AppointmentPage extends State<AppointmentPage> {
             borderRadius: BorderRadius.circular(5.0),
           ),
           child: ListTile(
-            title: Text(record.time),
+            title: Text(startTime + ' - ' + endTime),
             leading: Text(
               record.className,
               style: TextStyle(
@@ -166,7 +203,7 @@ class _AppointmentPage extends State<AppointmentPage> {
             ),
             trailing: Text(record.tutorName),
             isThreeLine: true,
-            subtitle: Text(record.date),
+            subtitle: Text(weekdayName),
             onTap: null,
           ),
         ),
@@ -187,8 +224,8 @@ class _AppointmentPage extends State<AppointmentPage> {
             },
           )
         ],
-      ),
-      body: _buildBody(context),
+      ),   
+      body: widget.isTutor ? MakeAppointment() : _buildBody(context),
     );
   }
 }

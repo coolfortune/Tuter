@@ -8,6 +8,8 @@ class DatabaseService {
   DatabaseService({this.uid});
 
   // collection reference
+  final CollectionReference appointmentsCollection =
+      Firestore.instance.collection('Appointments');
   final CollectionReference studentCollection =
       Firestore.instance.collection('Students');
   final CollectionReference tutorCollection =
@@ -25,6 +27,17 @@ class DatabaseService {
     });
   }
 
+  Future<void> makeAppointment(String uid, Appointment record) {
+    return appointmentsCollection.document(uid).setData({
+      'className': record.className,
+      'startTime': record.startTime,
+      'endTime': record.endTime,
+      'time': record.time,
+      'date': record.date,
+      'tutorName': record.tutorName,
+    }, merge: true);
+  }
+
   Future<void> addAppointment(String uid, Appointment record) async {
     final DocumentReference reference = record.reference;
 
@@ -40,6 +53,7 @@ class DatabaseService {
       'appointments': FieldValue.arrayRemove([reference])
     });
   }
+
   Future<void> updateTutorData(
       String email, String firstName, String lastName, String major) async {
     return await tutorCollection.document(uid).setData({
@@ -50,8 +64,32 @@ class DatabaseService {
       'positiveRatings': 0,
       'totalRatings': 0,
       'verified': false,
+      'userType': true,
     });
   }
+
+  Future<bool> getUserType(String uid) async {
+    bool isTutor = false;
+    try 
+    {
+    await Firestore.instance.
+          collection('Tutors')
+          .document(uid)
+          .get()
+          .then((DocumentSnapshot doc){
+            if (doc.exists)
+                isTutor = true;
+    });
+    }
+    catch(e)
+    {
+      print(e.toString());
+    }
+      return isTutor;
+  }
+
+  
+
 
   Stream<QuerySnapshot> get students {
     return studentCollection.snapshots();
