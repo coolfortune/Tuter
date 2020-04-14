@@ -318,7 +318,7 @@ class _MakeAppointmentState extends State<MakeAppointment> {
   }
 
   _makeAppointment() async {
-    String tutorName = await Firestore.instance.collection('Tutors').document(uid).get().then((snap) => snap.exists ? snap.data['tutorName'] : "");
+    String tutorName = await Firestore.instance.collection('Tutors').document(uid).get().then((snap) => snap.exists ? (snap.data['tutorName'] ?? "") : "");
     DateTime dateStart =
         date.add(Duration(hours: startTime.hour, minutes: startTime.minute));
     DateTime dateEnd =

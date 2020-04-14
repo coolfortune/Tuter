@@ -10,8 +10,11 @@ import 'package:Tuter/Models/user.dart';
 import 'package:flutter/services.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key key}) : super(key: key);
-  
+
+  final bool isTutor;
+
+  const HomePage({Key key, this.isTutor}) : super(key: key);
+
   @override
   _HomePage createState() => new _HomePage();
 }
@@ -22,6 +25,17 @@ class _HomePage extends State<HomePage> {
   bool _searching = false;
   final Auth _auth = Auth();
   String _scanResult;
+
+  final List<String> weekday = [
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+    'Sunday'
+  ];
+
 
   @override
   void initState() {

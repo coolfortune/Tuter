@@ -2,12 +2,15 @@ import 'package:Tuter/backend/auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
 import 'appointment.dart';
+import 'make-appointment.dart';
 import 'backend/database.dart';
 
 class AppointmentPage extends StatefulWidget {
-  const AppointmentPage({Key key}) : super(key: key);
+
+  final bool isTutor;
+
+  const AppointmentPage({Key key,this.isTutor}) : super(key: key);
   @override
   _AppointmentPage createState() => new _AppointmentPage();
 }
@@ -220,8 +223,8 @@ class _AppointmentPage extends State<AppointmentPage> {
             onPressed: _confirmSignout,
           )
         ],
-      ),
-      body: _buildBody(context),
+      ),   
+      body: widget.isTutor ? MakeAppointment() : _buildBody(context),
     );
   }
 
