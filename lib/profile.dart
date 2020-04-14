@@ -288,7 +288,7 @@ class _ProfilePage extends State<ProfilePage> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Confirm Upload'),
+            title: Text('Confirm Upload?'),
             content: Image.file(_image),
             actions: <Widget>[
               FlatButton(
