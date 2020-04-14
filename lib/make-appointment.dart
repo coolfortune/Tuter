@@ -16,10 +16,12 @@ class _MakeAppointmentState extends State<MakeAppointment> {
   Auth _auth = Auth();
   final List<String> classCodes = [
     'COP3405',
-    'COP4210',
-    'COP3100',
+    'COT4210',
+    'COT3100',
     'COP3502',
-    'COP3503'
+    'COP3503',
+    'COP4020',
+    'COP4600',
   ];
 
   final List<String> weekday = [
