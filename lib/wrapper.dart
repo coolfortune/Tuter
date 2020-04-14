@@ -12,10 +12,10 @@ class Wrapper extends StatelessWidget {
     final user = Provider.of<FirebaseUser>(context);
 
     // decide to either go to log in or home page
-    if (user == null)
+    if (user == null || !user.isEmailVerified)
       return LogIn();
     else 
-    return NavBar();
+      return NavBar();
   }
  
 }

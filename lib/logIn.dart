@@ -102,12 +102,7 @@ class _LogInState extends State<LogIn> {final _formKey = GlobalKey<FormState>();
                           loading = false;
                         });
                        }
-                      if (result == _auth.logOut()) {
-                        setState(() {
-                          print('User is not verified');
-                        });
-                      }
-                    }
+                  }
                 }
               ),
               Container(

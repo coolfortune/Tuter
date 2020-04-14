@@ -2,7 +2,6 @@ import 'package:Tuter/loading.dart';
 import 'package:Tuter/logIn.dart';
 import 'package:flutter/material.dart';
 import 'package:Tuter/backend/auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class SignupPage extends StatefulWidget {
   SignupPage({Key key}) : super(key: key);
@@ -53,6 +52,7 @@ class _SignupPage extends State<SignupPage> {
         setState(() => loading = true);
         print('registering student');
         dynamic result = await _auth.registerStudent(_email.trim(), _password, _firstName, _lastName, _major);
+
         if (result == null)
         {
           setState(() 
@@ -60,7 +60,7 @@ class _SignupPage extends State<SignupPage> {
             print('registration failed');
             loading = false;
           });
-        }
+        } 
       }
       // check for Tutor, create user and Tutor collection
       else if (_type == StudentType.tutor)
@@ -191,7 +191,7 @@ class _SignupPage extends State<SignupPage> {
                     shape: const StadiumBorder(),
                     onPressed: () {
                       saveUserInformation();
-                      Navigator.pop(context, LogIn());
+                      //Navigator.pop(context, LogIn());
                     }
                   ),
                 ]

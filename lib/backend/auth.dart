@@ -17,9 +17,11 @@ class Auth {
   }
 
   Future emailVerification(FirebaseUser user) async {
+  
     try {
       await user.sendEmailVerification();
-      return _userFromFirebaseUser(user);
+      if (user.isEmailVerified)
+        return _userFromFirebaseUser(user);
     } catch (e) {
       return e;
     }
@@ -31,17 +33,13 @@ class Auth {
       AuthResult result = await _auth.signInWithEmailAndPassword(email: email, password: password);
       FirebaseUser user = result.user;
       print('IN THE LOG IN');
-      user.reload();
-      result = await _auth.signInWithEmailAndPassword(email: email, password: password);
-      user = result.user;
-  
+      
       if (user.isEmailVerified) {
         print('USER IS VERIFIED');
         return user;
-      }
-      else {
+      } else {
         print('USER IS NOT VERIFIED');
-        return logOut();
+        return _auth.signOut();
       }
 
   }
