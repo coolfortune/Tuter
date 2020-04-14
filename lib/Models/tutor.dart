@@ -6,8 +6,8 @@ class Tutor {
   String major;
   List<String> schedule;
   bool verified = false;
-  int positiveRatings = 0;
-  int totalRatings = 0;
+  int positiveRatings = 1;
+  int totalRatings = 1;
 
   Tutor({ this.firstName, this.lastName, this.email, this.major, this.schedule });
 
