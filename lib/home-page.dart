@@ -82,8 +82,8 @@ class _HomePage extends State<HomePage> {
 
   Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
     final record = Appointment.fromSnapshot(data);
-
-    return PopupMenuButton(
+    return  PopupMenuButton(
+      enabled: widget.isTutor ? false : true,
       itemBuilder: (context) => [
         PopupMenuItem(
           value: 1,
