@@ -22,8 +22,8 @@ class DatabaseService {
       'firstName': firstName,
       'lastName': lastName,
       'major': major,
-      'positiveRatings': 0,
-      'totalRatings': 0,
+      'positiveRatings': 1,
+      'totalRatings': 1,
     });
   }
 
@@ -61,8 +61,8 @@ class DatabaseService {
       'firstName': firstName,
       'lastName': lastName,
       'major': major,
-      'positiveRatings': 0,
-      'totalRatings': 0,
+      'positiveRatings': 1,
+      'totalRatings': 1,
       'verified': false,
       'userType': true,
     });
