@@ -1,4 +1,5 @@
 import 'package:Tuter/appointment.dart';
+import 'package:Tuter/backend/auth.dart';
 import 'package:Tuter/backend/database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -12,6 +13,7 @@ class MakeAppointment extends StatefulWidget {
 }
 
 class _MakeAppointmentState extends State<MakeAppointment> {
+  Auth _auth = Auth();
   final List<String> classCodes = [
     'COP3405',
     'COP4210',
@@ -350,4 +352,5 @@ class _MakeAppointmentState extends State<MakeAppointment> {
           ),
         )));
   }
+
 }
